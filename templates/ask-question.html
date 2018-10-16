@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block title_content %}
+<title>Ask Mate|Ask a question</title>
+{% endblock title_content %}
+{% block h1_content %}
+<h1>Ask a question</h1>
+{% endblock h1_content %}
+{% block body_content %}
+<form method="POST">
+    <p>
+        Subject:
+    <br>
+        <input name="title" value=""></input>
+    </p>
+    <p>
+        Your question:
+    <br>
+        <textarea name="text" rows="5" cols="40"></textarea>
+    </p>
+    <p>
+        <input type="submit" value="Post question">
+    </p>
+</form>
+{% endblock body_content %}

@@ -1,0 +1,44 @@
+h1{
+	font-weight: bold;
+	font-size: 45px;
+	background-color: #A0E7F5;
+	border: 3px solid #fff;
+	padding: 20px;
+}
+h4{
+	font-weight: bold;
+	font-size: 20px;
+	background-color: #A0E7F5;
+	border: 3px solid #fff;
+	padding: 20px;
+}
+head{
+	text-align: center;
+	font-weight: bold;
+}
+body{
+	margin: 40px;
+	background-color: #f4f4f4;
+	color: #4D4D4D;
+	font-family: Helvetica;
+	font-size: 18px;
+}
+.question {
+	text-align: center;
+	font-weight: bold;
+	font-size: 25px;
+}
+.questions_list {
+  	background-color: #A0E7F5;
+  	border: 3px solid #fff;
+  	padding: 10px;
+  	font-size: 25px;
+  	text-align: center;
+}
+.item {
+  	background-color: #A0E7F5;
+  	border: 3px solid #fff;
+  	padding: 10px;
+  	font-size: 25px;
+  	text-align: center;
+}
