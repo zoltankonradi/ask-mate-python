@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 		<title>
 			Ask Mate|List
 		</title>
@@ -9,7 +9,7 @@
 			Ask Mate
 		</h1>
 		<hr>
-		<a href="/add-question">Ask a question</a>
+		<a href="/ask-question">Ask a question</a>
 		<h4>
 			List of user questions:
 		</h4>
@@ -24,29 +24,4 @@
 		</p>
     </body>
 </html>
-<!--
-{% extends "layout.html" %}
-{% block title_content %}
-<title>Ask Mate|List</title>
-{% endblock title_content %}
-{% block h1_content %}
-<h1>Ask Mate</h1>
-{% endblock h1_content %}
-{% block body_content %}
-<hr>
-<a href="/add-question">Ask a question</a>
-<h4>
-	List of user questions:
-</h4>
-<p>
-	{% if list_of_contents == "" %}
-		No questions to be answered!
-	{% else %}
-		<div class="boxes">
-			{% for question in dict %}
-				<div class="item">{{ question }}</div>
-			{% endfor %}
-		</div>
-	{% endif %}
-</p>
-{% endblock body_content %}
+
