@@ -1,27 +1,19 @@
-<!DOCTYPE html>
-<html>
-    <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-		<title>
-			Ask Mate|List
-		</title>
-		<h1>
-			Ask Mate
-		</h1>
-		<hr>
-		<a href="/ask-question">Ask a question</a>
-		<h4>
-			List of user questions:
-		</h4>
-    </head>
-    <body>
-		<p>
-		    <div class="questions_list">{{ question1 }}</div>
-		    <div class="questions_list">{{ question2 }}</div>
-		    <div class="questions_list">{{ question3 }}</div>
-		    <div class="questions_list">{{ question4 }}</div>
-		    <div class="questions_list">{{ question5 }}</div>
-		</p>
-    </body>
-</html>
-
+{% extends "layout.html" %}
+{% block title_content %}
+<title>Ask Mate|List</title>
+{% endblock title_content %}
+{% block h1_content %}
+<h1>Ask Mate</h1>
+{% endblock h1_content %}
+{% block body_content %}
+<a href="/add-question">Ask a question</a>
+<h4>
+	List of user questions:
+</h4>
+	{% for id, question in questions %}
+		<a href="/question/{{ id }}">
+			<div class="questions_list">{{ id }} : {{ question[1:-1] }}</div>
+		</a>
+	{% endfor %}
+</p>
+{% endblock body_content %}
