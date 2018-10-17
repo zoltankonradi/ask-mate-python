@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from data_manager import csv_reader, add_answer, generate_answer_id, get_submission_time
+from data_manager import csv_reader, add_answer, generate_answer_id, get_submission_time, add_question, generate_question_id
 import time
 
 app = Flask(__name__)
@@ -38,6 +38,16 @@ def sort_questions(questions, order):
 @app.route("/ask-question")
 def route_ask_question():
     return render_template("ask-question.html")
+
+
+@app.route("/ask-question/ask", methods=["POST"])
+def route_add_question():
+    id = generate_question_id(csv_reader("sample_data/question.csv"))
+    submission_time = get_submission_time()
+    title = request.form["title"]
+    message = request.form["text"]
+    add_question("sample_data/question.csv", id, submission_time, 0, 0, title, message, "")
+    return redirect("/list")
 
 
 @app.route("/question/<id>")

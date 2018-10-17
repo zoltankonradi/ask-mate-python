@@ -89,7 +89,7 @@ def add_answer(filename, id, submission_time, vote_number, question_id, message,
 
 
 def generate_question_id(data):
-    id = len(data["id"]) + 1
+    id = len(data["id"])
     return id
 
 
