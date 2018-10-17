@@ -9,11 +9,20 @@
 <div class="question">{{ message }}</div>
 <br>
 <p>
-	<div class="questions_list">
-		{% for answer in answers_list %}
-			<div class="item">{{ answer }}</div>
-		{% endfor %}
-	</div>
+<table align="center">
+    {% for answer, answer_id in answers_list %}
+        <tr>
+            <td>
+                <div class="questions_list">{{ answer }} : {{ answer_id }}</div>
+            </td>
+            <td>
+                <a href="/answer/{{ answer_id }}/delete">
+                    <img src="/static/delete.png" height="20">
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
 </p>
 <form method="POST" action="/question/{{ id }}">
 <p>

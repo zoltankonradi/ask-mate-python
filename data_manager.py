@@ -88,6 +88,18 @@ def add_answer(filename, id, submission_time, vote_number, question_id, message,
         writer.writerow(new_data)
 
 
+def delete_answer(answer_id):
+    with open("sample_data/answer.csv", 'r+') as csvfile:
+        file_content=csvfile.readlines()
+        for i in range(len(file_content)):
+            if file_content[i][0] == answer_id:
+                del file_content[i]
+                break
+    with open("sample_data/answer.csv", "w") as csvfile:
+        csvfile.writelines(file_content)
+    return
+
+
 def generate_question_id(data):
     id = len(data["id"]) + 1
     return id
@@ -100,5 +112,3 @@ def generate_answer_id(data):
 
 def get_submission_time():
     return int(time.time())
-
-

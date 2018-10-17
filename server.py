@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from data_manager import csv_reader, add_answer, generate_answer_id, get_submission_time
-import time
+from data_manager import csv_reader, add_answer, generate_answer_id, get_submission_time, delete_answer
 
 app = Flask(__name__)
 
@@ -12,7 +11,6 @@ def route_list():
     # ANSWERS: id, submission_time, vote_number, question_id, message, image
     questions = sort_questions(questions, request.args.get('select_order'))
     return render_template("list.html", questions=zip(questions[0], questions[1], questions[2]))
-
 
 
 def sort_questions(questions, order):
@@ -47,7 +45,7 @@ def route_question(id):
     title = questions.get('title')[int(id)]
     message = questions.get('message')[int(id)]
     start_at = -1
-    indexes = []
+    indexes = [] # this doesn't get the indexes of the answers related to the question, but their place in the answer.csv file
     while True:
         try:
             location = answers.get('question_id').index(id, start_at + 1)
@@ -59,7 +57,15 @@ def route_question(id):
     indexed_questions = []
     for i in indexes:
         indexed_questions.append(answers.get('message')[i])
-    return render_template("question.html", answers_list=indexed_questions, title=title, message=message, id=id)
+    actual_indexes=[]
+    with open("sample_data/answer.csv", 'r') as f:
+        content=f.readlines()
+        for line in content:
+            for question in indexed_questions:
+                if question in line:
+                    actual_indexes.append(line[0])
+                    break
+    return render_template("question.html", answers_list=zip(indexed_questions, actual_indexes), title=title, message=message, id=id)
 
 
 @app.route('/question/<id>', methods=['POST'])
@@ -68,6 +74,12 @@ def route_question_add_answer(id):
     submission_time=get_submission_time()
     add_answer("sample_data/answer.csv", answer_id, submission_time, 0, id, request.form['text'], "")
     return redirect(f"/question/{id}")
+
+
+@app.route("/answer/<answer_id>/delete")
+def route_delete_answer(answer_id):
+    delete_answer(answer_id)
+    return redirect(url_for('route_list'))
 
 
 if __name__ == "__main__":
