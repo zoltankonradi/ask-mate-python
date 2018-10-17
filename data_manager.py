@@ -101,7 +101,7 @@ def delete_answer(answer_id):
 
 
 def generate_question_id(data):
-    id = len(data["id"]) + 1
+    id = len(data["id"])
     return id
 
 
