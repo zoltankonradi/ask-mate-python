@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from data_manager import csv_reader, add_answer, generate_answer_id, get_submission_time, add_question, generate_question_id
+from data_manager import csv_reader, add_answer, generate_answer_id, get_submission_time, add_question, generate_question_id, delete_answer
 
 app = Flask(__name__)
 
