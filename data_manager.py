@@ -1,15 +1,5 @@
 import csv, time
 
-
-def csv_reader(filename):
-    with open(filename) as csvfile:
-        csv_file = csv.reader(csvfile, delimiter=',')
-        if filename == 'sample_data/question.csv':
-            return question_reader(csv_file)
-        else:
-            return answer_reader(csv_file)
-
-
 def answer_reader(csv_file):
     dictionary = {}
     for row in csv_file:
@@ -72,5 +62,44 @@ def question_reader(csv_file):
         else:
             dictionary.update({'image': []})
     return dictionary
+
+
+<<<<<<< Updated upstream
+=======
+def csv_reader(filename):
+    with open(filename) as csvfile:
+        csv_file = csv.reader(csvfile, delimiter=',')
+        if filename == 'sample_data/question.csv':
+            return question_reader(csv_file)
+        else:
+            return answer_reader(csv_file)
+
+
+
+def add_question(filename, id, submission_time, view_number, vote_number, title, message, image):
+    new_data = [id, submission_time, view_number, vote_number, title, message, image]
+    with open(filename, "a") as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(new_data)
+
+
+def add_answer(filename, id, submission_time, vote_number, question_id, message, image):
+    new_data =[id, submission_time, vote_number, question_id, message, image]
+    with open(filename, "a") as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(new_data)
+
+
+def generate_question_id(data):
+    id = len(data["id"]) + 1
+    return id
+
+def generate_answer_id(data):
+    id = len(data["id"]) + 1
+    return id
+
+
+def get_submission_time():
+    return int(time.time())
 
 

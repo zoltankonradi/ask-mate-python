@@ -75,34 +75,3 @@ if __name__ == "__main__":
         debug=True,
         port=5000
     )
-
-
-
-    """<!--
-{% extends "layout.html" %}
-{% block title_content %}
-<title>Ask Mate|List</title>
-{% endblock title_content %}
-{% block h1_content %}
-<h1>Ask Mate</h1>
-{% endblock h1_content %}
-{% block body_content %}
-<hr>
-<a href="/add-question">Ask a question</a>
-<h4>
-	List of user questions:
-</h4>
-<p>
-	{% if list_of_questions == "" %}
-		No questions to be answered!
-	{% else %}
-		<div class="boxes">
-			{% for i in list_of_questions %}
-				<div class="item">{{ questions[1:-1] }}</div>
-			{% endfor %}
-		</div>
-	{% endif %}
-</p>
-{% endblock body_content %}
--->
-"""
