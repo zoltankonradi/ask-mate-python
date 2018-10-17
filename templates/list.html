@@ -3,7 +3,7 @@
 <title>Ask Mate|List</title>
 {% endblock title_content %}
 {% block h1_content %}
-<h1>Ask Mate</h1>
+    <h1>Ask Mate</h1>
 {% endblock h1_content %}
 {% block body_content %}
 <a href="/add-question">Ask a question</a>
@@ -20,10 +20,26 @@
 		<input type="submit" value="Submit">
 	</form>
 </h4>
-	{% for id, question in questions %}
-		<a href="/question/{{ id }}">
-			<div class="questions_list">{{ id }} : {{ question }}</div>
-		</a>
+<table align="center">
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Submission Time</th>
+    </tr>
+	{% for id, question, submission_time in questions %}
+        <tr>
+            <td>
+                <div class="questions_list">{{ id }}</div>
+            </td>
+            <td>
+                <a href="/question/{{ id }}">
+                    <div class="questions_list">{{ question }}</div>
+                </a>
+            </td>
+            <td>
+                <div class="questions_list">{{ submission_time }}</div>
+            </td>
+        </tr>
 	{% endfor %}
-</p>
+</table>
 {% endblock body_content %}

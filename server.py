@@ -9,18 +9,29 @@ def route_list():
     questions = csv_reader('sample_data/question.csv')
     # QUESTIONS: id, submission_time, view_number, vote_number, title, message, image
     # ANSWERS: id, submission_time, vote_number, question_id, message, image
-    sorted_questions = sort_questions(zip(questions.get("ids"), questions.get("titles"), questions.get("submission_time")),
-                   request.args.get("select_order"))
-    return render_template("list.html", questions=zip(ids, titles))
+    questions = sort_questions(questions, request.args.get('select_order'))
+    return render_template("list.html", questions=zip(questions[0], questions[1], questions[2]))
 
 
 
 def sort_questions(questions, order):
+    if order is None:
+        return [questions.get('id'), questions.get("title"), questions.get("submission_time")]
+    sorted_questions = []
+    for i in range(len(questions.get("id"))):
+        sorted_questions.append([questions.get("id")[i],
+                                 questions.get("title")[i],
+                                 questions.get("submission_time")[i]])
     if order == "asc":
-        questions.sort(key=lambda k: int(k[2]))
+        sorted_questions.sort(key=lambda k: int(k[2]))
     elif order == "desc":
-        questions.sort(key=lambda k: int(k[2]), reverse = True)
-    return questions
+        sorted_questions.sort(key=lambda k: int(k[2]), reverse=True)
+    ids, titles, submission_time = [], [], []
+    for elem in sorted_questions:
+        ids.append(elem[0])
+        titles.append(elem[1])
+        submission_time.append(elem[2])
+    return [ids, titles, submission_time]
 
 
 @app.route("/ask-question")
@@ -48,6 +59,13 @@ def route_question(id):
     for i in indexes:
         indexed_questions.append(answers.get('message')[i])
     return render_template("question.html", answers_list=indexed_questions, title=title, message=message)
+
+
+@app.route('/question/<id>', methods=['POST'])
+def route_question_add_answer(id):
+    with open('sample_data/answer.csv', 'a') as f:
+        f.write(f"7,1493088154,35,0,\"{request.form['text']}\",")
+    return redirect(f"/question/{id}")
 
 
 if __name__ == "__main__":
