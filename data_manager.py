@@ -88,6 +88,23 @@ def add_answer(filename, id, submission_time, vote_number, question_id, message,
         writer.writerow(new_data)
 
 
+def update_view_number_question(filename, data):
+    with open (filename, "w") as csvfile:
+        writer = csv.writer(csvfile)
+        first_row = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+        writer.writerow(first_row)
+        for entry in range(len(data["id"])):
+            row = [data["id"][entry],
+                   data["submission_time"][entry],
+                   data["view_number"][entry],
+                   data["vote_number"][entry],
+                   data["title"][entry],
+                   data["message"][entry],
+                   data["image"][entry]]
+            writer.writerow(row)
+
+
+
 def generate_question_id(data):
     id = len(data["id"])
     return id

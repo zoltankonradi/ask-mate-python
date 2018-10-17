@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
-from data_manager import csv_reader, add_answer, generate_answer_id, get_submission_time, add_question, generate_question_id
-import time
+from data_manager import csv_reader, add_answer, generate_answer_id, get_submission_time, add_question, generate_question_id, update_view_number_question
+from connection import increase_view_number
 
 app = Flask(__name__)
 
@@ -54,6 +54,10 @@ def route_question(id):
     questions = csv_reader('sample_data/question.csv')
     title = questions.get('title')[int(id)]
     message = questions.get('message')[int(id)]
+    current_view_number = questions["view_number"][int(id)]
+    questions["view_number"][int(id)] = increase_view_number(int(current_view_number))
+    update_view_number_question("sample_data/question.csv", questions)
+    updated_number_of_views = questions["view_number"][int(id)]
     start_at = -1
     indexes = []
     while True:
@@ -67,7 +71,7 @@ def route_question(id):
     indexed_questions = []
     for i in indexes:
         indexed_questions.append(answers.get('message')[i])
-    return render_template("question.html", answers_list=indexed_questions, title=title, message=message, id=id)
+    return render_template("question.html", answers_list=indexed_questions, title=title, message=message, id=id, views=updated_number_of_views)
 
 
 @app.route('/question/<id>', methods=['POST'])
