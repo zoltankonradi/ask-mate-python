@@ -14,6 +14,7 @@ def route_list():
     return render_template("list.html", questions=zip(ids, titles))
 
 
+
 def sort_questions(questions, order):
     if order == "asc":
         questions.sort(key=lambda k: int(k[2]))
