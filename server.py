@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from data_manager import csv_reader, csv_writer
+from data_manager import csv_reader, add_answer, generate_answer_id, get_submission_time
 import time
 
 app = Flask(__name__)
@@ -59,14 +59,14 @@ def route_question(id):
     indexed_questions = []
     for i in indexes:
         indexed_questions.append(answers.get('message')[i])
-    return render_template("question.html", answers_list=indexed_questions, title=title, message=message)
+    return render_template("question.html", answers_list=indexed_questions, title=title, message=message, id=id)
 
 
 @app.route('/question/<id>', methods=['POST'])
 def route_question_add_answer(id):
-    with open('sample_data/answer.csv', 'a') as f:
-        id_ = len(csv_reader("sample_data/answer.csv").get('id'))
-        f.write(f"{id_},{int(time.time())},35,0,\"{request.form['text']}\",\n")
+    answer_id = generate_answer_id(csv_reader("sample_data/answer.csv"))
+    submission_time=get_submission_time()
+    add_answer("sample_data/answer.csv", answer_id, submission_time, 0, id, request.form['text'], "")
     return redirect(f"/question/{id}")
 
 

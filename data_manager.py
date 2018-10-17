@@ -1,5 +1,6 @@
 import csv, time
 
+
 def answer_reader(csv_file):
     dictionary = {}
     for row in csv_file:
@@ -64,8 +65,6 @@ def question_reader(csv_file):
     return dictionary
 
 
-<<<<<<< Updated upstream
-=======
 def csv_reader(filename):
     with open(filename) as csvfile:
         csv_file = csv.reader(csvfile, delimiter=',')
@@ -73,7 +72,6 @@ def csv_reader(filename):
             return question_reader(csv_file)
         else:
             return answer_reader(csv_file)
-
 
 
 def add_question(filename, id, submission_time, view_number, vote_number, title, message, image):
@@ -94,8 +92,9 @@ def generate_question_id(data):
     id = len(data["id"]) + 1
     return id
 
+
 def generate_answer_id(data):
-    id = len(data["id"]) + 1
+    id = len(data["id"])
     return id
 
 
