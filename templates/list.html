@@ -9,6 +9,16 @@
 <a href="/add-question">Ask a question</a>
 <h4>
 	List of user questions:
+	<form action="/" method="GET">
+		<select name="select_order">
+			<option value="" disabled selected hidden>
+				Select order by time
+			</option>
+			<option value="desc">Descending</option>
+			<option value="asc">Ascending</option>
+		</select>
+		<input type="submit" value="Submit">
+	</form>
 </h4>
 	{% for id, question in questions %}
 		<a href="/question/{{ id }}">

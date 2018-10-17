@@ -9,7 +9,17 @@ def route_list():
     questions = csv_reader('sample_data/question.csv')
     # QUESTIONS: id, submission_time, view_number, vote_number, title, message, image
     # ANSWERS: id, submission_time, vote_number, question_id, message, image
-    return render_template("list.html", questions=zip(questions.get('id'), questions.get('title')))
+    sorted_questions = sort_questions(zip(questions.get("ids"), questions.get("titles"), questions.get("submission_time")),
+                   request.args.get("select_order"))
+    return render_template("list.html", questions=zip(ids, titles))
+
+
+def sort_questions(questions, order):
+    if order == "asc":
+        questions.sort(key=lambda k: int(k[2]))
+    elif order == "desc":
+        questions.sort(key=lambda k: int(k[2]), reverse = True)
+    return questions
 
 
 @app.route("/ask-question")
