@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
-from data_manager import csv_reader
+from data_manager import csv_reader, csv_writer
+import time
 
 app = Flask(__name__)
 
@@ -64,7 +65,8 @@ def route_question(id):
 @app.route('/question/<id>', methods=['POST'])
 def route_question_add_answer(id):
     with open('sample_data/answer.csv', 'a') as f:
-        f.write(f"7,1493088154,35,0,\"{request.form['text']}\",")
+        id_ = len(csv_reader("sample_data/answer.csv").get('id'))
+        f.write(f"{id_},{int(time.time())},35,0,\"{request.form['text']}\",\n")
     return redirect(f"/question/{id}")
 
 
