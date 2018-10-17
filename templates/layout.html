@@ -3,9 +3,9 @@
     <head>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     {% block title_content %}{% endblock %}
+    {% block h1_content %}{% endblock %}
     </head>
     <body>
-        {% block h1_content %}{% endblock %}
         <hr>
         {% block body_content %}{% endblock %}
     </body>

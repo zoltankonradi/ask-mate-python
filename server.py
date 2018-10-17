@@ -1,19 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for
-from data_manager import get_table_from_file
+from data_manager import csv_reader
 
 app = Flask(__name__)
 
 @app.route("/")
 @app.route("/list")
 def route_list():
-    questions = get_table_from_file('sample_data/question.csv')
-    list_of_questions = []
-    list_of_ids = []
-    for element in range(len(questions)):
-        list_of_questions.append(questions[element][4])
-        list_of_ids.append(questions[element][0])
-    print(list_of_ids)
-    return render_template("list.html", questions=zip(list_of_ids[1:], list_of_questions[1:]))
+    questions = csv_reader('sample_data/question.csv')
+    # QUESTIONS: id, submission_time, view_number, vote_number, title, message, image
+    # ANSWERS: id, submission_time, vote_number, question_id, message, image
+    return render_template("list.html", questions=zip(questions.get('id'), questions.get('title')))
 
 
 @app.route("/ask-question")
@@ -23,22 +19,24 @@ def route_ask_question():
 
 @app.route("/question/<id>")
 def route_question(id):
-    answers = get_table_from_file('sample_data/answer.csv')
-    answers_list = []
-    for question_id_in_answers in answers:
-        if question_id_in_answers[3] == id:
-            answers_list.append(question_id_in_answers[4][1:-1])
-    # reads questions
-    questions = get_table_from_file('sample_data/question.csv')
-    title = ''
-    message = ''
-    for id_in_question in questions:
-        print(id_in_question)
-        print(id)
-        if id_in_question[0] == id:
-            title = id_in_question[4][1:-1]
-            message = id_in_question[-1]
-    return render_template("question.html", answers_list=answers_list, title=title, message=message)
+    answers = csv_reader('sample_data/answer.csv')
+    questions = csv_reader('sample_data/question.csv')
+    title = questions.get('title')[int(id)]
+    message = questions.get('message')[int(id)]
+    start_at = -1
+    indexes = []
+    while True:
+        try:
+            location = answers.get('question_id').index(id, start_at + 1)
+        except ValueError:
+            break
+        else:
+            indexes.append(location)
+            start_at = location
+    indexed_questions = []
+    for i in indexes:
+        indexed_questions.append(answers.get('message')[i])
+    return render_template("question.html", answers_list=indexed_questions, title=title, message=message)
 
 
 if __name__ == "__main__":
