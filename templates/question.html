@@ -29,8 +29,21 @@
 <br>
 <p>
 <table align="center">
-    {% for answer, answer_id in answers_list %}
+    {% for answer, answer_id, answers_vote_number in answers_list %}
         <tr>
+            <td>
+                <form action="/question/{{ id }}/answer-vote-up" method="GET">
+                    <input type="submit" value="Vote up">
+                </form>
+            </td>
+            <td>
+                <form action="/question/{{ id }}/answer-vote-down" method="GET">
+                    <input type="submit" value="Vote down">
+                </form>
+            </td>
+            <td>
+                <div class="questions_list">{{ answers_vote_number }}</div>
+            </td>
             <td>
                 <div class="questions_list">{{ answer }}</div>
             </td>

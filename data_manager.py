@@ -120,6 +120,20 @@ def update_view_number_question(filename, data):
             writer.writerow(row)
 
 
+def update_answer_csv(filename, data):
+    with open (filename, "w") as csvfile:
+        writer = csv.writer(csvfile)
+        first_row = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
+        writer.writerow(first_row)
+        for entry in range(len(data["id"])):
+            row = [data["id"][entry],
+                   data["submission_time"][entry],
+                   data["vote_number"][entry],
+                   data["question_id"][entry],
+                   data["message"][entry],
+                   data["image"][entry]]
+            writer.writerow(row)
+
 
 def generate_question_id(data):
     id = len(data["id"])
