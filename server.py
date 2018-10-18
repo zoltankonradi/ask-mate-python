@@ -74,14 +74,20 @@ def route_question(id):
     for i in indexes:
         indexed_questions.append(answers.get('message')[i])
     actual_indexes=[]
+    actual_answers=[]
     with open("sample_data/answer.csv", 'r') as f:
         content=f.readlines()
-        for line in content:
-            for question in indexed_questions:
-                if question in line:
-                    actual_indexes.append(line[0])
+        for i in range(len(content)):
+            content[i]=content[i].split(',')
+        for i in range(len(content)-1, 0, -1):
+            for j in range(len(indexed_questions)):
+                if ((indexed_questions[j] == content[i][4][1:-1]) or (indexed_questions[j] == content[i][4])) and (id == content[i][3]):
+                    actual_indexes.append(content[i][0])
+                    actual_answers.append(indexed_questions.pop(j))
                     break
-    return render_template("question.html", answers_list=zip(indexed_questions, actual_indexes), title=title, message=message, id=id, views=updated_number_of_views, vote_number=vote_number)
+    actual_indexes.reverse()
+    actual_answers.reverse()
+    return render_template("question.html", answers_list=zip(actual_answers, actual_indexes), title=title, message=message, id=id)
 
 
 @app.route('/question/<id>', methods=['POST'])
@@ -92,10 +98,10 @@ def route_question_add_answer(id):
     return redirect(f"/question/{id}")
 
 
-@app.route("/answer/<answer_id>/delete")
-def route_delete_answer(answer_id):
+@app.route("/answer/<answer_id>/delete/<id_>")
+def route_delete_answer(answer_id, id_):
     delete_answer(answer_id)
-    return redirect(url_for('route_list'))
+    return redirect(url_for('route_question', id=id_))
 
 
 @app.route("/question/<id>/<vote>")

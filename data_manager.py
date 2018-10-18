@@ -123,7 +123,7 @@ def generate_question_id(data):
 
 
 def generate_answer_id(data):
-    id = len(data["id"])
+    id = int(data["id"][-1]) + 1
     return id
 
 
