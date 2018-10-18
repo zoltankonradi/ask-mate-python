@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from data_manager import csv_reader, add_answer, generate_answer_id, get_submission_time, add_question, generate_question_id, update_view_number_question, delete_answer
 from connection import increase_view_number
+import time
 
 app = Flask(__name__)
 
@@ -16,7 +17,10 @@ def route_list():
 
 def sort_questions(questions, order):
     if order is None:
-        return [questions.get('id'), questions.get("title"), questions.get("submission_time"), questions.get("vote_number")]
+        converted_times = []
+        for times in questions.get("submission_time"):
+            converted_times.append(time.ctime(int(times)))
+        return [questions.get('id'), questions.get("title"), converted_times, questions.get("vote_number")]
     sorted_questions = []
     for i in range(len(questions.get("id"))):
         sorted_questions.append([questions.get("id")[i],
@@ -33,7 +37,10 @@ def sort_questions(questions, order):
         titles.append(elem[1])
         submission_time.append(elem[2])
         vote_number.append(elem[3])
-    return [ids, titles, submission_time, vote_number]
+    converted_times = []
+    for times in submission_time:
+        converted_times.append(time.ctime(int(times)))
+    return [ids, titles, converted_times, vote_number]
 
 
 @app.route("/ask-question", methods=["GET", "POST"])
