@@ -87,7 +87,7 @@ def route_question(id):
                     break
     actual_indexes.reverse()
     actual_answers.reverse()
-    return render_template("question.html", answers_list=zip(actual_answers, actual_indexes), title=title, message=message, id=id)
+    return render_template("question.html", answers_list=zip(actual_answers, actual_indexes), title=title, message=message, id=id, vote_number=vote_number, views=updated_number_of_views)
 
 
 @app.route('/question/<id>', methods=['POST'])
