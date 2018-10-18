@@ -111,6 +111,21 @@ def route_voting(id, vote):
     return redirect(f"/question/{id}")
 
 
+@app.route("/question/<id>/edit", methods=["GET", "POST"])
+def route_edit_question(id):
+    questions = csv_reader('sample_data/question.csv')
+    id = int(id)
+    if request.method == "GET":
+        action = "update"
+        return render_template("ask-question.html", id=id, action=action, data=questions)
+    if request.method == "POST":
+        questions["title"][int(id)] = request.form["title"]
+        questions["message"][int(id)] = request.form["text"]
+        update_view_number_question("sample_data/question.csv", questions)
+        update_view_number_question("sample_data/question.csv", questions)
+        return redirect("/list")
+
+
 if __name__ == "__main__":
     app.run(
         debug=True,

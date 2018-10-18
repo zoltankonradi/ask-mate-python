@@ -6,7 +6,24 @@
 <h1>Ask a question</h1>
 {% endblock h1_content %}
 {% block body_content %}
-<form method="POST" action="/ask-question">
+{% if  action == "update" %}
+<form method="post" action="/question/{{ id }}/edit">
+    <p>
+        Subject:
+    <br>
+        <input name="title" value="{{  data["title"][id]  }}">
+    </p>
+    <p>
+        Your question:
+    <br>
+        <textarea name="text" rows="5" cols="40">{{ data["message"][id] }}</textarea>
+    </p>
+    <p>
+        <input type="submit" value="Update question">
+    </p>
+</form>
+{% else %}
+<form method="post" action="/ask-question">
     <p>
         Subject:
     <br>
@@ -21,4 +38,5 @@
         <input type="submit" value="Post question">
     </p>
 </form>
+{% endif %}
 {% endblock body_content %}
