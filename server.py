@@ -88,13 +88,15 @@ def route_question(id):
             content[i]=content[i].split(',')
         for i in range(len(content)-1, 0, -1):
             for j in range(len(indexed_questions)):
-                if ((indexed_questions[j] == content[i][4][1:-1]) or (indexed_questions[j] == content[i][4])) and (id == content[i][3]):
+                if ((indexed_questions[j] == content[i][4][1:-1]) or (indexed_questions[j] == content[i][4]))\
+                     and (id == content[i][3]):
                     actual_indexes.append(content[i][0])
                     actual_answers.append(indexed_questions.pop(j))
                     break
     actual_indexes.reverse()
     actual_answers.reverse()
-    return render_template("question.html", answers_list=zip(actual_answers, actual_indexes), title=title, message=message, id=id, vote_number=vote_number, views=updated_number_of_views)
+    return render_template("question.html", answers_list=zip(actual_answers, actual_indexes),
+                           title=title, message=message, id=id, vote_number=vote_number, views=updated_number_of_views)
 
 
 @app.route('/question/<id>', methods=['POST'])

@@ -91,13 +91,14 @@ def add_answer(filename, id, submission_time, vote_number, question_id, message,
 def delete_answer(answer_id):
     with open("sample_data/answer.csv", 'r+') as csvfile:
         file_content=csvfile.readlines()
-        for i in range(len(file_content)):
-            file_content[i]=file_content[i].split(',')
-            if file_content[i][0] == answer_id:
-                del file_content[i]
-                break
-        for i in range(len(file_content)):
-            file_content[i]=','.join(file_content[i])
+    for i in range(len(file_content)):
+        file_content[i]=file_content[i].split(',')
+    for i in range(len(file_content)):
+        if file_content[i][0] == answer_id:
+            del file_content[i]
+            break
+    for i in range(len(file_content)):
+        file_content[i]=','.join(file_content[i])
     with open("sample_data/answer.csv", "w") as csvfile:
         csvfile.writelines(file_content)
     return
