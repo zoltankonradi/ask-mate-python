@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
-from data_manager import csv_reader, add_answer, generate_answer_id, get_submission_time, add_question, generate_question_id, update_view_number_question, delete_answer
+from data_manager import csv_reader, add_answer, generate_answer_id, get_submission_time, add_question
+from data_manager import generate_question_id, update_view_number_question, delete_answer, update_answer_csv
 from connection import increase_view_number
+import time
 
 app = Flask(__name__)
 
@@ -16,7 +18,10 @@ def route_list():
 
 def sort_questions(questions, order):
     if order is None:
-        return [questions.get('id'), questions.get("title"), questions.get("submission_time"), questions.get("vote_number")]
+        converted_times = []
+        for times in questions.get("submission_time"):
+            converted_times.append(time.ctime(int(times)))
+        return [questions.get('id'), questions.get("title"), converted_times, questions.get("vote_number")]
     sorted_questions = []
     for i in range(len(questions.get("id"))):
         sorted_questions.append([questions.get("id")[i],
@@ -33,7 +38,10 @@ def sort_questions(questions, order):
         titles.append(elem[1])
         submission_time.append(elem[2])
         vote_number.append(elem[3])
-    return [ids, titles, submission_time, vote_number]
+    converted_times = []
+    for times in submission_time:
+        converted_times.append(time.ctime(int(times)))
+    return [ids, titles, converted_times, vote_number]
 
 
 @app.route("/ask-question", methods=["GET", "POST"])
@@ -60,6 +68,7 @@ def route_question(id):
     update_view_number_question("sample_data/question.csv", questions)
     updated_number_of_views = questions["view_number"][int(id)]
     vote_number = questions.get('vote_number')[int(id)]
+    answers_vote_number = answers.get('vote_number')[int(id)]
     start_at = -1
     indexes = [] # this doesn't get the indexes of the answers related to the question, but their place in the answer.csv file
     while True:
@@ -74,14 +83,26 @@ def route_question(id):
     for i in indexes:
         indexed_questions.append(answers.get('message')[i])
     actual_indexes=[]
+    actual_answers=[]
+    actual_vote_number=[]
     with open("sample_data/answer.csv", 'r') as f:
         content=f.readlines()
-        for line in content:
-            for question in indexed_questions:
-                if question in line:
-                    actual_indexes.append(line[0])
+        for i in range(len(content)):
+            content[i]=content[i].split(',')
+        for i in range(len(content)-1, 0, -1):
+            for j in range(len(indexed_questions)):
+                if ((indexed_questions[j] == content[i][4][1:-1]) or (indexed_questions[j] == content[i][4]))\
+                     and (id == content[i][3]):
+                    actual_indexes.append(content[i][0])
+                    actual_answers.append(indexed_questions.pop(j))
+                    actual_vote_number.append(content[i][2])
                     break
-    return render_template("question.html", answers_list=zip(indexed_questions, actual_indexes), title=title, message=message, id=id, views=updated_number_of_views, vote_number=vote_number)
+    actual_indexes.reverse()
+    actual_answers.reverse()
+    actual_vote_number.reverse()
+    return render_template("question.html", answers_list=zip(actual_answers, actual_indexes, actual_vote_number),
+                           title=title, message=message, id=id, vote_number=vote_number, views=updated_number_of_views,
+                           answers_vote_number=answers_vote_number)
 
 
 @app.route('/question/<id>', methods=['POST'])
@@ -92,22 +113,30 @@ def route_question_add_answer(id):
     return redirect(f"/question/{id}")
 
 
-@app.route("/answer/<answer_id>/delete")
-def route_delete_answer(answer_id):
+@app.route("/answer/<answer_id>/delete/<id_>")
+def route_delete_answer(answer_id, id_):
     delete_answer(answer_id)
-    return redirect(url_for('route_list'))
+    return redirect(url_for('route_question', id=id_))
 
 
 @app.route("/question/<id>/<vote>")
-def route_voting(id, vote):
+def route_question_voting(id, vote):
     questions = csv_reader('sample_data/question.csv')
     vote_number = questions.get('vote_number')[int(id)]
+    answers = csv_reader('sample_data/answer.csv')
+    answers_vote_number = answers.get('vote_number')[int(id)]
     if vote == "vote-up":
         vote_number = int(vote_number) + 1
     elif vote == "vote-down":
         vote_number = int(vote_number) - 1
+    elif vote == "answer-vote-up":
+        answers_vote_number = int(answers_vote_number) + 1
+    elif vote == "answer-vote-down":
+        answers_vote_number = int(answers_vote_number) - 1
     questions["vote_number"][int(id)] = vote_number
     update_view_number_question("sample_data/question.csv", questions)
+    answers["vote_number"][int(id)] = answers_vote_number
+    update_answer_csv("sample_data/answer.csv", answers)
     return redirect(f"/question/{id}")
 
 

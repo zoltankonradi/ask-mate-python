@@ -32,13 +32,26 @@
 <br>
 <p>
 <table align="center">
-    {% for answer, answer_id in answers_list %}
+    {% for answer, answer_id, answers_vote_number in answers_list %}
         <tr>
             <td>
-                <div class="questions_list">{{ answer }} : {{ answer_id }}</div>
+                <form action="/question/{{ id }}/answer-vote-up" method="GET">
+                    <input type="submit" value="Vote up">
+                </form>
             </td>
             <td>
-                <a href="/answer/{{ answer_id }}/delete">
+                <form action="/question/{{ id }}/answer-vote-down" method="GET">
+                    <input type="submit" value="Vote down">
+                </form>
+            </td>
+            <td>
+                <div class="questions_list">{{ answers_vote_number }}</div>
+            </td>
+            <td>
+                <div class="questions_list">{{ answer }}</div>
+            </td>
+            <td>
+                <a href="/answer/{{ answer_id }}/delete/{{ id }}">
                     <img src="/static/delete.png" height="20">
                 </a>
             </td>

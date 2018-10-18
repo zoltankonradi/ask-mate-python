@@ -91,10 +91,14 @@ def add_answer(filename, id, submission_time, vote_number, question_id, message,
 def delete_answer(answer_id):
     with open("sample_data/answer.csv", 'r+') as csvfile:
         file_content=csvfile.readlines()
-        for i in range(len(file_content)):
-            if file_content[i][0] == answer_id:
-                del file_content[i]
-                break
+    for i in range(len(file_content)):
+        file_content[i]=file_content[i].split(',')
+    for i in range(len(file_content)):
+        if file_content[i][0] == answer_id:
+            del file_content[i]
+            break
+    for i in range(len(file_content)):
+        file_content[i]=','.join(file_content[i])
     with open("sample_data/answer.csv", "w") as csvfile:
         csvfile.writelines(file_content)
     return
@@ -116,6 +120,20 @@ def update_view_number_question(filename, data):
             writer.writerow(row)
 
 
+def update_answer_csv(filename, data):
+    with open (filename, "w") as csvfile:
+        writer = csv.writer(csvfile)
+        first_row = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
+        writer.writerow(first_row)
+        for entry in range(len(data["id"])):
+            row = [data["id"][entry],
+                   data["submission_time"][entry],
+                   data["vote_number"][entry],
+                   data["question_id"][entry],
+                   data["message"][entry],
+                   data["image"][entry]]
+            writer.writerow(row)
+
 
 def generate_question_id(data):
     id = len(data["id"])
@@ -123,7 +141,7 @@ def generate_question_id(data):
 
 
 def generate_answer_id(data):
-    id = len(data["id"])
+    id = int(data["id"][-1]) + 1
     return id
 
 
