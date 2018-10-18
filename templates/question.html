@@ -3,7 +3,26 @@
 <title>Ask Mate|Question</title>
 {% endblock title_content %}
 {% block h1_content %}
-<h1>{{ title }}</h1>
+<table align="center">
+    <tr>
+        <td>
+            <h1>{{ vote_number }}</h1>
+        </td>
+        <td>
+            <h1>{{ title }}</h1>
+        </td>
+        <td>
+            <form action="/question/{{ id }}/vote-up" method="GET">
+                <input type="submit" value="Vote up">
+            </form>
+        </td>
+        <td>
+            <form action="/question/{{ id }}/vote-down" method="GET">
+                <input type="submit" value="Vote down">
+            </form>
+        </td>
+    </tr>
+</table>
 {% endblock h1_content %}
 {% block body_content %}
 <div class="question">{{ message }}</div>

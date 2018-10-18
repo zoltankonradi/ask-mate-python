@@ -129,3 +129,4 @@ def generate_answer_id(data):
 
 def get_submission_time():
     return int(time.time())
+

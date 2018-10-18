@@ -23,13 +23,17 @@
 <table align="center">
     <tr>
         <th>ID</th>
+        <th>Votes</th>
         <th>Title</th>
         <th>Submission Time</th>
     </tr>
-	{% for id, question, submission_time in questions %}
+	{% for id, question, submission_time, vote_number in questions %}
         <tr>
             <td>
                 <div class="questions_list">{{ id }}</div>
+            </td>
+            <td>
+                <div class="questions_list">{{ vote_number }}</div>
             </td>
             <td>
                 <a href="/question/{{ id }}">
