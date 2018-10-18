@@ -121,7 +121,7 @@ def route_voting(id, vote):
         vote_number = int(vote_number) - 1
     questions["vote_number"][int(id)] = vote_number
     update_view_number_question("sample_data/question.csv", questions)
-    return redirect(f"/question/{id}")
+    return redirect(url_for('route_question', id=id))
 
 
 if __name__ == "__main__":
