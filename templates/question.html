@@ -15,12 +15,12 @@
             <h1>{{ title }}</h1>
         </td>
         <td>
-            <form action="/question/{{ id }}/vote-up" method="GET">
+            <form action="/question/{{ id }}/vote-up">
                 <input type="submit" value="Vote up">
             </form>
         </td>
         <td>
-            <form action="/question/{{ id }}/vote-down" method="GET">
+            <form action="/question/{{ id }}/vote-down">
                 <input type="submit" value="Vote down">
             </form>
         </td>
@@ -44,15 +44,15 @@
 {% endif %}
 <p>
 <table align="center">
-    {% for answer, answer_id, answers_vote_number in answers_list %}
+    {% for answer, answer_id, answers_vote_number, submission_time in answers_list %}
         <tr>
             <td>
-                <form action="/question/{{ id }}/answer-vote-up" method="GET">
+                <form action="/question/{{ id }}/answer-vote-up/{{ submission_time }}">
                     <input type="submit" value="Vote up">
                 </form>
             </td>
             <td>
-                <form action="/question/{{ id }}/answer-vote-down" method="GET">
+                <form action="/question/{{ id }}/answer-vote-down/{{ submission_time }}">
                     <input type="submit" value="Vote down">
                 </form>
             </td>
@@ -92,4 +92,5 @@
 </div>
 </form>
     <h5>Number of times this question was viewed: {{ views }}</h5>
+<a href = "/">Back to questions</a>
 {% endblock %}

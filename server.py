@@ -82,7 +82,9 @@ def route_question(id):
             indexes.append(location)
             start_at = location
     indexed_questions = []
+    indexed_submission_time = []
     for i in indexes:
+        indexed_submission_time.append(answers.get('submission_time')[i])
         indexed_questions.append(answers.get('message')[i])
     actual_indexes=[]
     actual_answers=[]
@@ -102,7 +104,7 @@ def route_question(id):
     actual_indexes.reverse()
     actual_answers.reverse()
     actual_vote_number.reverse()
-    return render_template("question.html", answers_list=zip(actual_answers, actual_indexes, actual_vote_number),
+    return render_template("question.html", answers_list=zip(actual_answers, actual_indexes, actual_vote_number, indexed_submission_time),
                            title=title, message=message, id=id, vote_number=vote_number, views=updated_number_of_views,
                            answers_vote_number=answers_vote_number)
 
@@ -125,19 +127,27 @@ def route_delete_answer(answer_id, id_):
 def route_question_voting(id, vote):
     questions = csv_reader('sample_data/question.csv')
     vote_number = questions.get('vote_number')[int(id)]
-    answers = csv_reader('sample_data/answer.csv')
-    answers_vote_number = answers.get('vote_number')[int(id)]
     if vote == "vote-up":
         vote_number = int(vote_number) + 1
     elif vote == "vote-down":
         vote_number = int(vote_number) - 1
-    elif vote == "answer-vote-up":
-        answers_vote_number = int(answers_vote_number) + 1
-    elif vote == "answer-vote-down":
-        answers_vote_number = int(answers_vote_number) - 1
     questions["vote_number"][int(id)] = vote_number
     update_view_number_question("sample_data/question.csv", questions)
-    answers["vote_number"][int(id)] = answers_vote_number
+    return redirect(f"/question/{id}")
+
+
+@app.route("/question/<id>/<vote>/<submission_time>")
+def route_answer_voting(id, vote, submission_time):
+    answers = csv_reader('sample_data/answer.csv')
+    submission_time_index = 0
+    for i in answers.get('submission_time'):
+        if i == submission_time:
+            submission_time_index = answers.get('submission_time').index(i)
+    if vote == "answer-vote-up":
+        answer_vote_number = int(answers.get("vote_number")[submission_time_index]) + 1
+    elif vote == "answer-vote-down":
+        answer_vote_number = int(answers.get("vote_number")[submission_time_index]) - 1
+    answers["vote_number"][int(submission_time_index)] = answer_vote_number
     update_answer_csv("sample_data/answer.csv", answers)
     return redirect(f"/question/{id}")
 
