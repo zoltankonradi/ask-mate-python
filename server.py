@@ -106,7 +106,7 @@ def route_question(id):
     actual_vote_number.reverse()
     return render_template("question.html", answers_list=zip(actual_answers, actual_indexes, actual_vote_number, indexed_submission_time),
                            title=title, message=message, id=id, vote_number=vote_number, views=updated_number_of_views,
-                           answers_vote_number=answers_vote_number)
+                           answers_vote_number=answers_vote_number, image=image)
 
 
 @app.route('/question/<id>', methods=['POST'])
