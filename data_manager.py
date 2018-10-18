@@ -1,5 +1,5 @@
 import csv, time
-
+import urllib
 
 def answer_reader(csv_file):
     dictionary = {}

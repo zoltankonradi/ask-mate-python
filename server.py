@@ -53,7 +53,8 @@ def route_ask_question():
         submission_time = get_submission_time()
         title = request.form["title"]
         message = request.form["text"]
-        add_question("sample_data/question.csv", id, submission_time, 0, 0, title, message, "")
+        image = request.form["url"]
+        add_question("sample_data/question.csv", id, submission_time, 0, 0, title, message, image)
         return redirect("/list")
 
 
@@ -68,6 +69,7 @@ def route_question(id):
     update_view_number_question("sample_data/question.csv", questions)
     updated_number_of_views = questions["view_number"][int(id)]
     vote_number = questions.get('vote_number')[int(id)]
+    image = questions.get("image")[int(id)]
     answers_vote_number = answers.get('vote_number')[int(id)]
     start_at = -1
     indexes = [] # this doesn't get the indexes of the answers related to the question, but their place in the answer.csv file
@@ -97,6 +99,7 @@ def route_question(id):
                     actual_answers.append(indexed_questions.pop(j))
                     actual_vote_number.append(content[i][2])
                     break
+    return render_template("question.html", answers_list=zip(indexed_questions, actual_indexes), title=title, message=message, id=id, views=updated_number_of_views, vote_number=vote_number, image=image)
     actual_indexes.reverse()
     actual_answers.reverse()
     actual_vote_number.reverse()

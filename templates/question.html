@@ -30,6 +30,18 @@
 {% block body_content %}
 <div class="question">{{ message }}</div>
 <br>
+{% if image != "" %}
+<p>
+    <div class="picture_div" style="margin:0px auto; text-align:center;">
+    <img src="{{ image }}" width="200" height="120" alt="Your image">
+</p>
+{% else %}
+    <p>
+        <div align="center">
+            No image given. :'(
+        </div>
+    </p>
+{% endif %}
 <p>
 <table align="center">
     {% for answer, answer_id, answers_vote_number in answers_list %}
@@ -64,6 +76,16 @@
 	<div align="center">
     	<textarea name="text" rows="5" cols="40">{{ add_answer }}</textarea>
     </div>
+</p>
+<p>
+    <div align="center">
+        URL of your image:
+    </div>
+</p>
+<p>
+<div align="center">
+    <input type="text" name="response-image">
+</div>
 </p>
 <div align="center">
 	<input type="submit" value="Post answer">
