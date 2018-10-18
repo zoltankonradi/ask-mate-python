@@ -99,7 +99,6 @@ def route_question(id):
                     actual_answers.append(indexed_questions.pop(j))
                     actual_vote_number.append(content[i][2])
                     break
-    return render_template("question.html", answers_list=zip(indexed_questions, actual_indexes), title=title, message=message, id=id, views=updated_number_of_views, vote_number=vote_number, image=image)
     actual_indexes.reverse()
     actual_answers.reverse()
     actual_vote_number.reverse()
