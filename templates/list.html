@@ -1,47 +1,70 @@
 {% extends "layout.html" %}
 {% block title_content %}
-<title>Ask Mate|List</title>
+    <title>Ask Mate|List</title>
 {% endblock title_content %}
 {% block h1_content %}
-    <h1>Ask Mate</h1>
+<div class="header">
+    <div class="container">
+        <div class="logo">
+            Ask Mate
+        </div>
+        <div class="navigation">
+            <a href="/ask-question" class="nav_link">Ask a question</a>
+        </div>
+    </div>
+</div>
 {% endblock h1_content %}
 {% block body_content %}
-<a href="/ask-question">Ask a question</a>
 <h4>
+    <br>
 	List of user questions:
 	<form action="/" method="GET">
 		<select name="select_order">
 			<option value="" disabled selected hidden>
-				Select order by time
+				Select ordering
 			</option>
-			<option value="desc">Descending</option>
-			<option value="asc">Ascending</option>
+			<option value="DESC_BY_TIME">Newest</option>
+			<option value="ASC_BY_TIME">Oldest</option>
+            <option value="DESC_BY_VOTES">Highest rated</option>
+			<option value="ASC_BY_VOTES">Lowest rated</option>
+            <option value="DESC_BY_VIEWS">Most viewed</option>
+			<option value="ASC_BY_VIEWS">Least viewed</option>
 		</select>
 		<input type="submit" value="Submit">
 	</form>
 </h4>
 <table align="center">
     <tr>
+        <th> </th>
         <th>ID</th>
         <th>Votes</th>
         <th>Title</th>
         <th>Submission Time</th>
+        <th>Views</th>
     </tr>
-	{% for id, question, submission_time, vote_number in questions %}
+	{% for data in question_data %}
         <tr>
             <td>
-                <div class="questions_list">{{ id }}</div>
-            </td>
-            <td>
-                <div class="questions_list">{{ vote_number }}</div>
-            </td>
-            <td>
-                <a href="/question/{{ id }}">
-                    <div class="questions_list">{{ question }}</div>
+                <a href="/{{ data.id }}">
+                    <img src="/static/delete.png" height="20">
                 </a>
             </td>
             <td>
-                <div class="questions_list">{{ submission_time }}</div>
+                <div class="questions_list">{{ data.id }}</div>
+            </td>
+            <td>
+                <div class="questions_list">{{ data.vote_number }}</div>
+            </td>
+            <td>
+                <a class="questions_link" href="/question/{{ data.id }}">
+                    <div class="questions_list">{{ data.title }}</div>
+                </a>
+            </td>
+            <td>
+                <div class="questions_list">{{ data.submission_time }}</div>
+            </td>
+            <td>
+                <div class="questions_list">{{ data.view_number }}</div>
             </td>
         </tr>
 	{% endfor %}

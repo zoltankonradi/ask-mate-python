@@ -1,150 +1,142 @@
-import csv, time
-import urllib
-
-def answer_reader(csv_file):
-    dictionary = {}
-    for row in csv_file:
-        if 'id' in dictionary:
-            dictionary['id'].append(row[0])
-        else:
-            dictionary.update({'id': []})
-        if 'submission_time' in dictionary:
-            dictionary['submission_time'].append(row[1])
-        else:
-            dictionary.update({'submission_time': []})
-        if 'vote_number' in dictionary:
-            dictionary['vote_number'].append(row[2])
-        else:
-            dictionary.update({'vote_number': []})
-        if 'question_id' in dictionary:
-            dictionary['question_id'].append(row[3])
-        else:
-            dictionary.update({'question_id': []})
-        if 'message' in dictionary:
-            dictionary['message'].append(row[4])
-        else:
-            dictionary.update({'message': []})
-        if 'image' in dictionary:
-            dictionary['image'].append(row[5])
-        else:
-            dictionary.update({'image': []})
-    return dictionary
+import connection
+import util
 
 
-def question_reader(csv_file):
-    dictionary = {}
-    for row in csv_file:
-        if 'id' in dictionary:
-            dictionary['id'].append(row[0])
-        else:
-            dictionary.update({'id': []})
-        if 'submission_time' in dictionary:
-            dictionary['submission_time'].append(row[1])
-        else:
-            dictionary.update({'submission_time': []})
-        if 'view_number' in dictionary:
-            dictionary['view_number'].append(row[2])
-        else:
-            dictionary.update({'view_number': []})
-        if 'vote_number' in dictionary:
-            dictionary['vote_number'].append(row[3])
-        else:
-            dictionary.update({'vote_number': []})
-        if 'title' in dictionary:
-            dictionary['title'].append(row[4])
-        else:
-            dictionary.update({'title': []})
-        if 'message' in dictionary:
-            dictionary['message'].append(row[5])
-        else:
-            dictionary.update({'message': []})
-        if 'image' in dictionary:
-            dictionary['image'].append(row[6])
-        else:
-            dictionary.update({'image': []})
-    return dictionary
+# KZoli - Reads in the questions, and sorts it.
+@connection.connection_handler
+def question_reader(cursor, order):
+    if order == 'DESC_BY_TIME':
+        cursor.execute("""
+                        SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY submission_time DESC;
+                       """)
+    elif order == 'ASC_BY_TIME':
+        cursor.execute("""
+                        SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY submission_time ASC;
+                       """)
+    elif order == 'ASC_BY_VOTES':
+        cursor.execute("""
+                        SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY vote_number ASC;
+                       """)
+    elif order == 'DESC_BY_VOTES':
+        cursor.execute("""
+                        SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY vote_number DESC;
+                       """)
+    elif order == 'ASC_BY_VIEWS':
+        cursor.execute("""
+                        SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY view_number ASC;
+                       """)
+    elif order == 'DESC_BY_VIEWS':
+        cursor.execute("""
+                        SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY view_number DESC;
+                       """)
+    else:
+        cursor.execute("""
+                        SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY vote_number DESC;
+                       """)
+    question_data = cursor.fetchall()
+    return question_data
 
 
-def csv_reader(filename):
-    with open(filename) as csvfile:
-        csv_file = csv.reader(csvfile, delimiter=',')
-        if filename == 'sample_data/question.csv':
-            return question_reader(csv_file)
-        else:
-            return answer_reader(csv_file)
+# KZoli - Add new question.
+@connection.connection_handler
+def add_question(cursor, subject, text, picture_url):
+    time = util.generate_time()
+    cursor.execute("""INSERT INTO question (submission_time, view_number, vote_number, title, message, image) 
+                          VALUES (%(sub_time)s, %(views)s, %(votes)s, %(subject)s, %(text)s, %(image)s);""",
+                   {'sub_time': time, 'views': 0, 'votes': 0, 'subject': subject,
+                    'text': text, 'image': picture_url})
 
 
-def add_question(filename, id, submission_time, view_number, vote_number, title, message, image):
-    new_data = [id, submission_time, view_number, vote_number, title, message, image]
-    with open(filename, "a") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(new_data)
+# KZoli - Lists all the answers.
+@connection.connection_handler
+def answer_reader(cursor, question_id):
+    cursor.execute("""
+                    SELECT id, submission_time, vote_number, question_id, message, image FROM answer 
+                    WHERE question_id = %(q_id)s ORDER BY submission_time ASC;
+                   """, {'q_id': int(question_id)})
+    answer_data = cursor.fetchall()
+    return answer_data
 
 
-def add_answer(filename, id, submission_time, vote_number, question_id, message, image):
-    new_data =[id, submission_time, vote_number, question_id, message, image]
-    with open(filename, "a") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(new_data)
+# KZoli - Finds the question for the answers to be displayed. Or just simply find a question.
+@connection.connection_handler
+def find_question_for_answer(cursor, question_id):
+    cursor.execute("""
+                    SELECT id, submission_time, vote_number, title, message, view_number FROM question 
+                    WHERE id = %(q_id)s;
+                   """, {'q_id': int(question_id)})
+    question_data = cursor.fetchall()
+    return question_data
 
 
-def delete_answer(answer_id):
-    with open("sample_data/answer.csv", 'r+') as csvfile:
-        file_content=csvfile.readlines()
-    for i in range(len(file_content)):
-        file_content[i]=file_content[i].split(',')
-    for i in range(len(file_content)):
-        if file_content[i][0] == answer_id:
-            del file_content[i]
-            break
-    for i in range(len(file_content)):
-        file_content[i]=','.join(file_content[i])
-    with open("sample_data/answer.csv", "w") as csvfile:
-        csvfile.writelines(file_content)
-    return
+# KZoli - Post an answer.
+@connection.connection_handler
+def post_answer(cursor, question_id, text, image):
+    time = util.generate_time()
+    cursor.execute("""INSERT INTO answer (submission_time, vote_number, question_id, message, image) 
+                      VALUES (%(sub_time)s, %(votes)s, %(q_id)s, %(text)s, %(image_url)s);""",
+                   {'sub_time': time, 'votes': 0, 'q_id': question_id, 'text': text, 'image_url': image})
 
 
-def update_view_number_question(filename, data):
-    with open (filename, "w") as csvfile:
-        writer = csv.writer(csvfile)
-        first_row = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
-        writer.writerow(first_row)
-        for entry in range(len(data["id"])):
-            row = [data["id"][entry],
-                   data["submission_time"][entry],
-                   data["view_number"][entry],
-                   data["vote_number"][entry],
-                   data["title"][entry],
-                   data["message"][entry],
-                   data["image"][entry]]
-            writer.writerow(row)
+# KZoli - Delete an answer.
+@connection.connection_handler
+def delete_answer(cursor, answer_id):
+    cursor.execute("""
+                    DELETE FROM answer WHERE id = %(id)s;
+                   """,
+                   {'id': answer_id})
 
 
-def update_answer_csv(filename, data):
-    with open (filename, "w") as csvfile:
-        writer = csv.writer(csvfile)
-        first_row = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
-        writer.writerow(first_row)
-        for entry in range(len(data["id"])):
-            row = [data["id"][entry],
-                   data["submission_time"][entry],
-                   data["vote_number"][entry],
-                   data["question_id"][entry],
-                   data["message"][entry],
-                   data["image"][entry]]
-            writer.writerow(row)
+# KZoli - Delete a question.
+@connection.connection_handler
+def delete_question(cursor, question_id):
+    cursor.execute("""
+                    DELETE FROM answer WHERE question_id = %(id)s;
+                   """,
+                   {'id': question_id})
+    cursor.execute("""
+                    DELETE FROM question WHERE id = %(id)s;
+                   """,
+                   {'id': question_id})
 
 
-def generate_question_id(data):
-    id = len(data["id"])
-    return id
+# KZoli - Update a question.
+@connection.connection_handler
+def update_question(cursor, question_id, subject, text):
+    cursor.execute("""
+                    UPDATE question SET message = %(message)s, title = %(title)s
+                    WHERE id = %(id)s;""",
+                   {'message': text, 'title': subject, 'id': question_id})
 
 
-def generate_answer_id(data):
-    id = int(data["id"][-1]) + 1
-    return id
+# KZoli - Update votes on a question.
+@connection.connection_handler
+def update_votes_question(cursor, question_id, vote):
+    if vote == 'vote-up':
+        cursor.execute("""
+                        UPDATE question SET vote_number = vote_number + 1 WHERE id = %(id)s;""",
+                       {'id': int(question_id)})
+    else:
+        cursor.execute("""
+                        UPDATE question SET vote_number = vote_number - 1 WHERE id = %(id)s;""",
+                       {'id': int(question_id)})
 
 
-def get_submission_time():
-    return int(time.time())
+# KZoli - Update votes on an answer.
+@connection.connection_handler
+def update_votes_answer(cursor, vote, answer_id):
+    if vote == 'vote-up':
+        cursor.execute("""
+                        UPDATE answer SET vote_number = vote_number + 1 WHERE id = %(id)s;""",
+                       {'id': int(answer_id)})
+    else:
+        cursor.execute("""
+                        UPDATE answer SET vote_number = vote_number - 1 WHERE id = %(id)s;""",
+                       {'id': int(answer_id)})
 
+# KZoli - View counter.
+@connection.connection_handler
+def update_views(cursor, question_id):
+    cursor.execute("""
+                    UPDATE question SET view_number = view_number + 1 WHERE id = %(id)s;""",
+                   {'id': int(question_id)})

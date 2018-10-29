@@ -3,94 +3,91 @@
 <title>Ask Mate|Question</title>
 {% endblock title_content %}
 {% block h1_content %}
-<table align="center">
-    <tr>
-        <td>
-            <a href="/question/{{  id  }}/edit">Edit Question</a>
-        </td>
-        <td>
-            <h1>{{ vote_number }}</h1>
-        </td>
-        <td>
-            <h1>{{ title }}</h1>
-        </td>
-        <td>
-            <form action="/question/{{ id }}/vote-up">
-                <input type="submit" value="Vote up">
-            </form>
-        </td>
-        <td>
-            <form action="/question/{{ id }}/vote-down">
-                <input type="submit" value="Vote down">
-            </form>
-        </td>
-    </tr>
-</table>
+<div class="header">
+    <div class="container">
+        <div class="logo">
+            {% for data in question %}{{ data.vote_number }}{% endfor %}
+            |
+            {% for data in question %}{{ data.title }}{% endfor %}
+        </div>
+        <div class="navigation">
+            <a href="/question/{% for data in question %}{{  data.id  }}{% endfor %}/edit" class="nav_link">Edit Question</a>
+            <a href="/question/{% for data in question %}{{  data.id  }}{% endfor %}/vote-up">
+                <img src="/static/up.png" height="35">
+            </a>
+            <a href="/question/{% for data in question %}{{  data.id  }}{% endfor %}/vote-down">
+                <img src="/static/down.png" height="35">
+            </a>
+        </div>
+    </div>
+</div>
 {% endblock h1_content %}
 {% block body_content %}
-<div class="question">{{ message }}</div>
 <br>
-{% if image != "" %}
 <p>
-    <div class="picture_div" style="margin:0px auto; text-align:center;">
-    <img src="{{ image }}" width="200" height="120" alt="Your image">
+    <table align="center">
+        <div class="question">{% for data in question %}{{  data.message  }}{% endfor %}</div>
+        <hr>
+        {% for data in answer %}
+            <tr>
+                <td>
+                    <a href="/question/{{ data.question_id }}/vote-up/{{ data.id }}">
+                        <img src="/static/up.png" height="20">
+                    </a>
+                </td>
+                <td>
+                    <a href="/question/{{ data.question_id }}/vote-down/{{ data.id }}">
+                        <img src="/static/down.png" height="20">
+                    </a>
+                </td>
+                <td>
+                    {{ data.vote_number }}
+                </td>
+                <td>
+                    <div class="answer_list">
+                        <div class="answer_vote">
+                            {{ data.message }}
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    {% if data.image != "" %}
+                        <p>
+                            <img src="{{ data.image }}" height="200"/>
+                        </p>
+                    {% else %}
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="/answer/{{ data.id }}/delete/{{ data.question_id }}">
+                        <img src="/static/delete.png" height="20">
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
 </p>
-{% else %}
+<br>
+<form method="POST" action="/question/{% for data in question %}{{ data.id }}{% endfor %}">
     <p>
         <div align="center">
-            No image given. :'(
+            <textarea name="text" rows="5" cols="40">{{ add_answer }}</textarea>
         </div>
     </p>
-{% endif %}
-<p>
-<table align="center">
-    {% for answer, answer_id, answers_vote_number, submission_time in answers_list %}
-        <tr>
-            <td>
-                <form action="/question/{{ id }}/answer-vote-up/{{ submission_time }}">
-                    <input type="submit" value="Vote up">
-                </form>
-            </td>
-            <td>
-                <form action="/question/{{ id }}/answer-vote-down/{{ submission_time }}">
-                    <input type="submit" value="Vote down">
-                </form>
-            </td>
-            <td>
-                <div class="questions_list">{{ answers_vote_number }}</div>
-            </td>
-            <td>
-                <div class="questions_list">{{ answer }}</div>
-            </td>
-            <td>
-                <a href="/answer/{{ answer_id }}/delete/{{ id }}">
-                    <img src="/static/delete.png" height="20">
-                </a>
-            </td>
-        </tr>
-    {% endfor %}
-</table>
-</p>
-<form method="POST" action="/question/{{ id }}">
-<p>
-	<div align="center">
-    	<textarea name="text" rows="5" cols="40">{{ add_answer }}</textarea>
-    </div>
-</p>
-<p>
-    <div align="center">
-        URL of your image:
-    </div>
-</p>
-<p>
-<div align="center">
-    <input type="text" name="response-image">
-</div>
-</p>
-<div align="center">
-	<input type="submit" value="Post answer">
-</div>
+    <p>
+        <div align="center">
+            URL of your image:
+        </div>
+    </p>
+    <p>
+        <div align="center">
+            <input type="text" name="response-image">
+        </div>
+    </p>
+        <div align="center">
+            <input type="submit" value="Post answer">
+        </div>
 </form>
-    <h5>Number of times this question was viewed: {{ views }}</h5>
+    <h5>Number of times this question was viewed: {% for data in question %}{{ data.view_number }}{% endfor %}</h5>
 <a href = "/">Back to questions</a>
 {% endblock %}

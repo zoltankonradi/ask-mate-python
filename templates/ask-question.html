@@ -3,46 +3,56 @@
 <title>Ask Mate|Ask a question</title>
 {% endblock title_content %}
 {% block h1_content %}
-<h1>Ask a question</h1>
+<div class="header">
+    <div class="container">
+        <div class="logo">
+            Ask a question
+        </div>
+    </div>
+</div>
 {% endblock h1_content %}
 {% block body_content %}
 {% if  action == "update" %}
-<form method="post" action="/question/{{ id }}/edit">
-    <p>
-        Subject:
-    <br>
-        <input name="title" value="{{  data["title"][id]  }}">
-    </p>
-    <p>
-        Your question:
-    <br>
-        <textarea name="text" rows="5" cols="40">{{ data["message"][id] }}</textarea>
-    </p>
-    <p>
-        <input type="submit" value="Update question">
-    </p>
+<form method="post" action="/question/{{ question_id }}/edit">
+    <div align="center">
+        <p>
+            Subject:
+        <br>
+            <input name="title" value="{% for data in question %}{{  data.title  }}{% endfor %}">
+        </p>
+        <p>
+            Your question:
+        <br>
+            <textarea name="text" rows="5" cols="40">{% for data in question %}{{  data.message  }}{% endfor %}</textarea>
+        </p>
+        <p>
+            <input type="submit" value="Update question">
+        </p>
+    </div>
 </form>
 {% else %}
 <form method="post" action="/ask-question">
-    <p>
-        Subject:
-    <br>
-        <input name="title" value="">
-    </p>
-    <p>
-        Your question:
-    <br>
-        <textarea name="text" rows="5" cols="40"></textarea>
-    </p>
-    <p>
-        URL of your image:
-    </p>
-    <p>
-        <input type="text" name="url">
-    </p>
-    <p>
-        <input type="submit" value="Post question">
-    </p>
+    <div align="center">
+        <p>
+            Subject:
+        <br>
+            <input name="title" value="">
+        </p>
+        <p>
+            Your question:
+        <br>
+            <textarea name="text" rows="5" cols="40"></textarea>
+        </p>
+        <p>
+            URL of your image:
+        </p>
+        <p>
+            <input type="text" name="url">
+        </p>
+        <p>
+            <input type="submit" value="Post question">
+        </p>
+    </div>
 </form>
 {% endif %}
 {% endblock body_content %}
