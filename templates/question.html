@@ -12,6 +12,7 @@
         </div>
         <div class="navigation">
             <a href="/question/{% for data in question %}{{  data.id  }}{% endfor %}/edit" class="nav_link">Edit Question</a>
+            <a href="/question/{% for data in question %}{{  data.id  }}{% endfor %}/new-comment" class="nav_link">Add Comment</a>
             <a href="/question/{% for data in question %}{{  data.id  }}{% endfor %}/vote-up">
                 <img src="/static/up.png" height="35">
             </a>
@@ -28,6 +29,12 @@
     <table align="center">
         <div class="question">{% for data in question %}{{  data.message  }}{% endfor %}</div>
         <hr>
+        {% for comment in comment_question %}
+        <div class="question_comment">
+            {{ comment.message }}
+        </div>
+        <br>
+        {% endfor %}
         {% for data in answer %}
             <tr>
                 <td>
@@ -47,7 +54,12 @@
                     <div class="answer_list">
                         <div class="answer_vote">
                             {{ data.message }}
+                            <a href="/answer/{{  data.id  }}/new-comment">Add Comment</a>
                         </div>
+                        <br>
+                        {% for i in data.comments %}
+                            {{ i.message }}<br>
+                        {% endfor %}
                     </div>
                 </td>
                 <td>

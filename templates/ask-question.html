@@ -3,6 +3,31 @@
 <title>Ask Mate|Ask a question</title>
 {% endblock title_content %}
 {% block h1_content %}
+{% if action == "add_comment_question" %}
+<div class="header">
+    <div class="container">
+        <div class="logo">
+            Add comment to question
+        </div>
+    </div>
+</div>
+{% elif action == "add_comment_answer" %}
+<div class="header">
+    <div class="container">
+        <div class="logo">
+            Add comment to answer
+        </div>
+    </div>
+</div>
+{% elif action == "update" %}
+<div class="header">
+    <div class="container">
+        <div class="logo">
+            Edit question
+        </div>
+    </div>
+</div>
+{% else %}
 <div class="header">
     <div class="container">
         <div class="logo">
@@ -10,6 +35,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% endblock h1_content %}
 {% block body_content %}
 {% if  action == "update" %}
@@ -27,6 +53,32 @@
         </p>
         <p>
             <input type="submit" value="Update question">
+        </p>
+    </div>
+</form>
+{% elif action == "add_comment_answer" %}
+<form method="post" action="/answer/{{ answer_id }}/new-comment">
+    <div align="center">
+        <p>
+            Your comment:
+        <br>
+            <textarea name="text" rows="5" cols="40"></textarea>
+        </p>
+        <p>
+            <input type="submit" value="Post comment">
+        </p>
+    </div>
+</form>
+{% elif action == "add_comment_question" %}
+<form method="post" action="/question/{{ question_id }}/new-comment">
+    <div align="center">
+        <p>
+            Your comment:
+        <br>
+            <textarea name="text" rows="5" cols="40"></textarea>
+        </p>
+        <p>
+            <input type="submit" value="Post comment">
         </p>
     </div>
 </form>

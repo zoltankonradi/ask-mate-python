@@ -75,9 +75,18 @@ a:hover{
 .answer_list{
     text-align: justify;
     display: inline-block;
-    padding: 30px 10px;
+    padding: 20px 10px;
     background-color: #54BBF2;
     border-radius: 10px;
     font-weight: bold;
     color: white;
+}
+.question_comment{
+    font-size: 15px;
+    text-align: justify;
+    display: inline-block;
+    padding: 10px 10px;
+    background-color: aliceblue;
+    border-radius: 10px;
+    margin: 3px;
 }
