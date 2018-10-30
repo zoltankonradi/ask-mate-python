@@ -49,11 +49,13 @@
         <col width="20px" />
         <col width="30px" />
         <col width="50px" />
-        <tr>
-            <th>Comment</th>
-            <th>Submission time</th>
-            <th>Edits</th>
-        </tr>
+        {% if comment_question != [] %}
+            <tr>
+                <th>Comment</th>
+                <th>Submission time</th>
+                <th>Edits</th>
+            </tr>
+        {% endif %}
         {% for comment in comment_question %}
             <tr>
                 <td>
@@ -198,6 +200,11 @@
             <input type="submit" value="Post answer">
         </div>
 </form>
-    <h5>Number of times this question was viewed: {% for data in question %}{{ data.view_number }}{% endfor %}</h5>
-<a href = "/">Back to questions</a>
+<div class="limit" align="center">
+    <a class="limit_link" href = "/">Back to questions</a>
+</div>
+<div class="views" align="center">
+    Views: {% for data in question %}{{ data.view_number }}{% endfor %}
+</div>
+
 {% endblock %}

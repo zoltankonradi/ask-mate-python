@@ -471,6 +471,7 @@ def compare_new_tags_to_old_ones(cursor, new_tags_for_question, question_id):
                           INSERT INTO question_tag (question_id, tag_id) VALUES (%(q_id)s, %(t_id)s);
                           """, {'q_id': question_id, 't_id': new_tag})
 
+
 @connection.connection_handler
 def add_tag_for_existing_question(cursor, new_tag, question_id):
     cursor.execute("""

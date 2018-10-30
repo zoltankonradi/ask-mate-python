@@ -106,7 +106,7 @@ a:hover{
     color: darkslategrey;
     float: right;
 }
-th{
+th, h4{
     font-size: 12px;
     font-weight: bold;
     color: darkslategrey;
@@ -157,7 +157,7 @@ input[type=submit]{
     border-radius: 5px;
     font-weight: bold;
     text-decoration: none;
-    border-color: dodgerblue;
+    border-width: 0px;
 }
 input[type=text]{
     border-color: dodgerblue;
@@ -174,6 +174,7 @@ select{
     border-color: dodgerblue;
     border-width: 1px;
     border-radius: 5px;
+    background-color: white;
 }
 ul{
     list-style-type: none;
