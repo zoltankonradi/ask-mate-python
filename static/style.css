@@ -31,6 +31,7 @@ h1, h4{
 .navigation{
     float: right;
     color: white;
+    margin: 5px;
 }
 .navigation a.nav_link{
     background-color: dodgerblue;
@@ -40,6 +41,7 @@ h1, h4{
     font-weight: bold;
     text-decoration: none;
     float: right;
+    margin-left: 5px;
 }
 .questions_list{
     text-align: justify;
@@ -56,7 +58,7 @@ a.questions_link{
 .question{
     text-align: center;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 25px;
     color: darkslategrey;
 }
 /* KZoli - Adds color to the links */
@@ -74,19 +76,110 @@ a:hover{
 }
 .answer_list{
     text-align: justify;
-    display: inline-block;
-    padding: 20px 10px;
+    display: block;
     background-color: #54BBF2;
     border-radius: 10px;
     font-weight: bold;
+    font-size: 15px;
     color: white;
+    padding: 10px 10px;
 }
 .question_comment{
-    font-size: 15px;
-    text-align: justify;
-    display: inline-block;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    display: block;
     padding: 10px 10px;
-    background-color: aliceblue;
+    background-color: white;
     border-radius: 10px;
+    color: darkslategrey;
+}
+.answer_comment{
+    font-size: 9px;
+    text-align: left;
+    display: inline-block;
+    padding: 10px 10px 10px 10px;
+    background-color: aliceblue;
+    border-radius: 7px;
     margin: 3px;
+    font-weight: bold;
+    color: darkslategrey;
+    float: right;
+}
+th{
+    font-size: 12px;
+    font-weight: bold;
+    color: darkslategrey;
+}
+table.fixed {
+    table-layout:fixed;
+}
+table.fixed td {
+    overflow: hidden;
+}
+.add_comment_and_edit_answer{
+    float: right;
+}
+.test{
+    background-color: #54BBF2;
+    border-radius: 10px;
+}
+.limit{
+    color: white;
+    margin: 15px;
+}
+.limit a.limit_link{
+    background-color: dodgerblue;
+    color: white;
+    padding: 10px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: 5px;
+}
+.search {
+    color: white;
+    margin: 15px;
+}
+.search a.search_link{
+    background-color: dodgerblue;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: 5px;
+}
+input[type=submit]{
+    background-color: dodgerblue;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    border-color: dodgerblue;
+}
+input[type=text]{
+    border-color: dodgerblue;
+    border-radius: 5px;
+
+}
+textarea{
+    border-color: dodgerblue;
+    border-width: 2px;
+    border-radius: 5px;
+}
+select{
+    font-family: 'Montserrat', sans-serif;
+    border-color: dodgerblue;
+    border-width: 1px;
+    border-radius: 5px;
+}
+ul{
+    list-style-type: none;
+}
+.tags{
+    font-size: 15px;
+    color: white;
+    font-style: italic;
 }

@@ -27,6 +27,22 @@
         </div>
     </div>
 </div>
+{% elif action == "edit_answer" %}
+<div class="header">
+    <div class="container">
+        <div class="logo">
+            Edit answer
+        </div>
+    </div>
+</div>
+{% elif action == "edit_comment" %}
+<div class="header">
+    <div class="container">
+        <div class="logo">
+            Edit comment
+        </div>
+    </div>
+</div>
 {% else %}
 <div class="header">
     <div class="container">
@@ -50,6 +66,32 @@
             Your question:
         <br>
             <textarea name="text" rows="5" cols="40">{% for data in question %}{{  data.message  }}{% endfor %}</textarea>
+        </p>
+        <p>
+            <table align="center">
+                <tr>
+                    <td>
+                        Tags:
+                    </td>
+                    <td>
+                        <ul>
+                            {% for tag in tags%}
+                            <li>
+                                {% if tag.id in checked_tags %}
+                                    <input type="checkbox" name="{{ tag.id }}" value="{{ tag.id }}" checked="checked">{{ tag.name }}<br>
+                                {% else %}
+                                    <input type="checkbox" name="{{ tag.id }}" value="{{ tag.id }}">{{ tag.name }}<br>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                            <li>
+                                Custom tag:
+                                <input type="text" name="new_tag">
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
         </p>
         <p>
             <input type="submit" value="Update question">
@@ -82,18 +124,79 @@
         </p>
     </div>
 </form>
+{% elif action == "edit_answer" %}
+<form method="post" action="/answer/{{ answer_id }}/edit">
+    <div align="center">
+        <p>
+            Your answer:
+        <br>
+            <textarea name="text" rows="5" cols="40">{% for data in answer %}{{  data.message  }}{% endfor %}</textarea>
+        </p>
+        <p>
+            <input type="submit" value="Post answer">
+        </p>
+    </div>
+</form>
+{% elif action == "edit_comment_q" %}
+<form method="post" action="/comments/{{ comment_id }}/edit/q">
+    <div align="center">
+        <p>
+            Your comment:
+        <br>
+            <textarea name="text" rows="5" cols="40">{% for data in comment %}{{  data.message  }}{% endfor %}</textarea>
+        </p>
+        <p>
+            <input type="submit" value="Post comment">
+        </p>
+    </div>
+</form>
+{% elif action == "edit_comment_a" %}
+<form method="post" action="/comments/{{ comment_id }}/edit/a">
+    <div align="center">
+        <p>
+            Your comment:
+        <br>
+            <textarea name="text" rows="5" cols="40">{% for data in comment %}{{  data.message  }}{% endfor %}</textarea>
+        </p>
+        <p>
+            <input type="submit" value="Post comment">
+        </p>
+    </div>
+</form>
 {% else %}
 <form method="post" action="/ask-question">
     <div align="center">
         <p>
             Subject:
         <br>
-            <input name="title" value="">
+            <input type="text" name="title" value="">
         </p>
         <p>
             Your question:
         <br>
             <textarea name="text" rows="5" cols="40"></textarea>
+        </p>
+        <p>
+            <table align="center">
+                <tr>
+                    <td>
+                        Tags:
+                    </td>
+                    <td>
+                        <ul>
+                            {% for tag in tags%}
+                            <li>
+                                <input type="checkbox" name="{{ tag.id }}" value="{{ tag.id }}">{{ tag.name }}<br>
+                            </li>
+                            {% endfor %}
+                            <li>
+                                Custom tag:
+                                <input type="text" name="new_tag">
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
         </p>
         <p>
             URL of your image:
@@ -105,6 +208,5 @@
             <input type="submit" value="Post question">
         </p>
     </div>
-</form>
 {% endif %}
 {% endblock body_content %}

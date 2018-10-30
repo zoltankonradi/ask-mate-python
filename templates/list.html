@@ -3,6 +3,18 @@
     <title>Ask Mate|List</title>
 {% endblock title_content %}
 {% block h1_content %}
+{% if search_mode == True %}
+<div class="header">
+    <div class="container">
+        <div class="logo">
+            Ask Mate | Search results
+        </div>
+        <div class="navigation">
+            <a href="/" class="nav_link">Go back</a>
+        </div>
+    </div>
+</div>
+{% else %}
 <div class="header">
     <div class="container">
         <div class="logo">
@@ -13,27 +25,17 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% endblock h1_content %}
 {% block body_content %}
-<h4>
-    <br>
-	List of user questions:
-	<form action="/" method="GET">
-		<select name="select_order">
-			<option value="" disabled selected hidden>
-				Select ordering
-			</option>
-			<option value="DESC_BY_TIME">Newest</option>
-			<option value="ASC_BY_TIME">Oldest</option>
-            <option value="DESC_BY_VOTES">Highest rated</option>
-			<option value="ASC_BY_VOTES">Lowest rated</option>
-            <option value="DESC_BY_VIEWS">Most viewed</option>
-			<option value="ASC_BY_VIEWS">Least viewed</option>
-		</select>
-		<input type="submit" value="Submit">
-	</form>
-</h4>
-<table align="center">
+{% if search_mode == True %}
+<table align="center" class="fixed">
+    <col width="25px" />
+    <col width="20px" />
+    <col width="20px" />
+    <col width="600px" />
+    <col width="185px" />
+    <col width="40px" />
     <tr>
         <th> </th>
         <th>ID</th>
@@ -45,9 +47,11 @@
 	{% for data in question_data %}
         <tr>
             <td>
-                <a href="/{{ data.id }}">
-                    <img src="/static/delete.png" height="20">
-                </a>
+                <div class="questions_list">
+                    <a href="/{{ data.id }}">
+                        <img src="/static/delete.png" height="15">
+                    </a>
+                </div>
             </td>
             <td>
                 <div class="questions_list">{{ data.id }}</div>
@@ -69,4 +73,87 @@
         </tr>
 	{% endfor %}
 </table>
+{% else %}
+<h4>
+    <br>
+	List of user questions:
+    {% if limit == True %}
+	<form action="/" method="GET">
+    {% else %}
+    <form action="/list" method="GET">
+    {% endif %}
+		<select name="select_order">
+			<option value="" disabled selected hidden>
+				Select ordering
+			</option>
+			<option value="DESC_BY_TIME">Newest</option>
+			<option value="ASC_BY_TIME">Oldest</option>
+            <option value="DESC_BY_VOTES">Highest rated</option>
+			<option value="ASC_BY_VOTES">Lowest rated</option>
+            <option value="DESC_BY_VIEWS">Most viewed</option>
+			<option value="ASC_BY_VIEWS">Least viewed</option>
+		</select>
+		<input type="submit" value="Submit">
+	</form>
+</h4>
+<div class="search" align="center">
+    <form action="/search" method="GET">
+        <input type="text" name="q" value="">
+        <input name="Name" type="submit" value="Search">
+    </form>
+</div>
+<table align="center" class="fixed">
+    <col width="25px" />
+    <col width="20px" />
+    <col width="20px" />
+    <col width="600px" />
+    <col width="185px" />
+    <col width="40px" />
+    <tr>
+        <th> </th>
+        <th>ID</th>
+        <th>Votes</th>
+        <th>Title</th>
+        <th>Submission Time</th>
+        <th>Views</th>
+    </tr>
+	{% for data in question_data %}
+        <tr>
+            <td>
+                <div class="questions_list">
+                    <a href="/{{ data.id }}">
+                        <img src="/static/delete.png" height="15">
+                    </a>
+                </div>
+            </td>
+            <td>
+                <div class="questions_list">{{ data.id }}</div>
+            </td>
+            <td>
+                <div class="questions_list">{{ data.vote_number }}</div>
+            </td>
+            <td>
+                <a class="questions_link" href="/question/{{ data.id }}">
+                    <div class="questions_list">{{ data.title }}</div>
+                </a>
+            </td>
+            <td>
+                <div class="questions_list">{{ data.submission_time }}</div>
+            </td>
+            <td>
+                <div class="questions_list">{{ data.view_number }}</div>
+            </td>
+        </tr>
+	{% endfor %}
+</table>
+    {% if limit == True %}
+        <div class="limit" align="center">
+            <a href="/list" class="limit_link">Show all questions</a>
+        </div>
+    {% else %}
+        <div class="limit" align="center">
+            <a href="/" class="limit_link">Limit questions</a>
+        </div>
+    {% endif %}
+{% endif %}
 {% endblock body_content %}

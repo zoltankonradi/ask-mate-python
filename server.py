@@ -6,29 +6,61 @@ app = Flask(__name__)
 
 # KZoli - Lists and orders questions
 @app.route("/")
-@app.route("/list")
 def route_list():
+    limit = True
     sorting = request.args.get('select_order') # KZoli - Gets the ordering.
-    question_data = data_manager.question_reader(sorting)  # KZoli - Gets a sorted dictionary of data.
+    question_data = data_manager.question_reader(sorting, limit)  # KZoli - Gets a sorted dictionary of data.
     """
     [{'id': 0, 'vote_number': 7, 'title': 'How to make lists in Python?',
       'submission_time': datetime.datetime(2017, 4, 28, 8, 29), comments: [{}, {}]},
      {'id': 1, 'vote_number': 9, 'title': 'Wordpress loading multiple jQuery Versions',
       'submission_time': datetime.datetime(2017, 4, 29, 9, 19)}]
     """
-    return render_template("list.html", question_data=question_data)
+    return render_template("list.html", question_data=question_data, limit=limit)
+
+
+@app.route("/list")
+def route_list_no_limit():
+    limit = False
+    sorting = request.args.get('select_order')
+    question_data = data_manager.question_reader(sorting, limit)
+    return render_template("list.html", question_data=question_data, limit=limit)
+
+
+@app.route("/search")
+def route_search():
+    limit = False
+    search_mode = True
+    search_text = request.args.get('q')
+    question_data = data_manager.search(search_text)
+    return render_template("list.html", question_data=question_data, search_mode=search_mode, limit=limit)
 
 
 # KZoli - Add new question
 @app.route("/ask-question", methods=["GET", "POST"])
 def route_ask_question():
     if request.method == "GET":
-        return render_template("ask-question.html")
+        tags = data_manager.read_tags()
+        return render_template("ask-question.html", tags=tags)
     else:
         subject = request.form['title']
         text = request.form['text']
         picture_url = request.form['url']
+        new_tag = request.form['new_tag']
+        # Finds selected tags.
+        tag_ids = data_manager.get_list_of_tag_ids()
+        selected_tags_list = []
+        for tag_id in tag_ids:
+            try:
+                selected_tags = request.form[str(tag_id)]
+                selected_tags_list.append(selected_tags)
+            except KeyError:
+                continue
         data_manager.add_question(subject, text, picture_url)
+        # If new tag not empty, adds it
+        if new_tag != '':
+            data_manager.add_tag(new_tag)
+        data_manager.add_existing_tags_to_new_question(selected_tags_list)
         return redirect(url_for('route_list'))
 
 
@@ -38,8 +70,10 @@ def route_question(question_id):
     answer = data_manager.answer_reader(question_id)
     question = data_manager.find_question_for_answer(question_id)
     comment_question = data_manager.question_comment_reader(question_id)
+    question_tags = data_manager.get_tags_for_question(question_id)
     data_manager.update_views(question_id)
-    return render_template('question.html', answer=answer, question=question, comment_question=comment_question)
+    return render_template('question.html', answer=answer, question=question, comment_question=comment_question,
+                           question_tags=question_tags)
 
 
 # KZoli - Add an answer to the specific question.
@@ -69,14 +103,47 @@ def route_delete_question(question_id):
 @app.route("/question/<question_id>/edit", methods=["GET", "POST"])
 def route_edit_question(question_id):
     if request.method == "GET":
+        tags = data_manager.read_tags()
+        checked_tags = data_manager.get_checked_tags(question_id)
         question = data_manager.find_question_for_answer(question_id)
         action = "update"
-        return render_template("ask-question.html", question_id=question_id, action=action, question=question)
+        return render_template("ask-question.html", question_id=question_id, action=action, question=question, tags=tags,
+                               checked_tags=checked_tags)
     if request.method == "POST":
         subject = request.form['title']
         text = request.form['text']
+        new_tag = request.form['new_tag']
+        # Finds selected tags.
+        tag_ids = data_manager.get_list_of_tag_ids()
+        selected_tags_list = []
+        for tag_id in tag_ids:
+            try:
+                selected_tags = request.form[str(tag_id)]
+                selected_tags_list.append(selected_tags)
+            except KeyError:
+                continue
+        # If new tag not empty, adds it
+        if new_tag != '':
+            data_manager.add_tag_for_existing_question(new_tag, question_id)
+        # Compare new tags to old ones.
+        data_manager.compare_new_tags_to_old_ones(selected_tags_list, question_id)
+        # Updates question data
         data_manager.update_question(question_id, subject, text)
-        return redirect(url_for('route_list'))
+        return redirect(url_for('route_question', question_id=question_id))
+
+
+# KZoli - Edit an answer.
+@app.route("/answer/<answer_id>/edit", methods=["GET", "POST"])
+def route_edit_answer(answer_id):
+    question_id = data_manager.find_question_id_for_answer_id(answer_id)
+    if request.method == "GET":
+        answer = data_manager.find_answer_by_answer_id(answer_id)
+        action = "edit_answer"
+        return render_template("ask-question.html", question_id=question_id, action=action, answer=answer, answer_id=answer_id)
+    if request.method == "POST":
+        text = request.form['text']
+        data_manager.update_answer(text, answer_id)
+        return redirect(url_for('route_question', question_id=question_id))
 
 
 # KZoli - Vote on a question.
@@ -103,6 +170,7 @@ def add_comment_to_question(question_id):
         data_manager.post_comment(question_id, new_comment, 'question')
         return redirect(url_for('route_question', question_id=question_id))
 
+
 @app.route("/answer/<answer_id>/new-comment", methods=["GET", "POST"])
 def add_comment_to_answer(answer_id):
     if request.method == "GET":
@@ -111,7 +179,45 @@ def add_comment_to_answer(answer_id):
     if request.method == "POST":
         new_comment = request.form['text']
         data_manager.post_comment(answer_id, new_comment, 'answer')
-        return redirect(url_for('route_list'))
+        question_id = data_manager.find_question_id_for_answer_id(answer_id)
+        return redirect(url_for('route_question', question_id=question_id))
+
+
+# KZoli - Delete comment.
+@app.route("/comments/<int:comment_id>/<int:question_id>/delete")
+def route_delete_comment(comment_id, question_id):
+    data_manager.delete_question_comment(comment_id)
+    return redirect(url_for('route_question', question_id=question_id))
+
+
+# KZoli - Edit question comment.
+@app.route("/comments/<comment_id>/edit/q", methods=['GET', 'POST'])
+def route_edit_comment_question(comment_id):
+    if request.method == "GET":
+        comment = data_manager.find_comment_message_by_comment_id(comment_id)
+        action = "edit_comment_q"
+        return render_template("ask-question.html", comment_id=comment_id, action=action, comment=comment)
+    if request.method == "POST":
+        data_manager.increase_edit_counter(comment_id)
+        new_comment = request.form['text']
+        data_manager.update_question_comment(new_comment, comment_id)
+        question_id = data_manager.find_question_id_by_comment_id(comment_id)
+        return redirect(url_for('route_question', question_id=question_id))
+
+
+# KZoli - Edit comment.
+@app.route("/comments/<comment_id>/edit/a", methods=['GET', 'POST'])
+def route_edit_comment_answer(comment_id):
+    if request.method == "GET":
+        comment = data_manager.find_comment_message_by_comment_id(comment_id)
+        action = "edit_comment_a"
+        return render_template("ask-question.html", comment_id=comment_id, action=action, comment=comment)
+    if request.method == "POST":
+        data_manager.increase_edit_counter(comment_id)
+        new_comment = request.form['text']
+        data_manager.update_question_comment(new_comment, comment_id)
+        question_id = data_manager.find_question_id_by_comment_id_for_edit_answer_comment(comment_id)
+        return redirect(url_for('route_question', question_id=question_id))
 
 
 if __name__ == "__main__":
