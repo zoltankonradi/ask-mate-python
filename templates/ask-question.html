@@ -78,9 +78,11 @@
                             {% for tag in tags%}
                             <li>
                                 {% if tag.id in checked_tags %}
-                                    <input type="checkbox" name="{{ tag.id }}" value="{{ tag.id }}" checked="checked">{{ tag.name }}<br>
+                                    <input type="checkbox" name="{{ tag.id }}" value="{{ tag.id }}" checked="checked">{{ tag.name }}
+                                    <a class="delete_link" href="/question/{{ question_id }}/tag/{{ tag.id }}/delete">Delete</a><br>
                                 {% else %}
-                                    <input type="checkbox" name="{{ tag.id }}" value="{{ tag.id }}">{{ tag.name }}<br>
+                                    <input type="checkbox" name="{{ tag.id }}" value="{{ tag.id }}">{{ tag.name }}
+                                    <a class="delete_link" href="/question/{{ question_id }}/tag/{{ tag.id }}/delete">Delete</a><br>
                                 {% endif %}
                             </li>
                             {% endfor %}

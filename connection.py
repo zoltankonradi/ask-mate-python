@@ -5,7 +5,7 @@ import psycopg2.extras
 def get_connection_string():
     # setup connection string
     # to do this, please define these environment variables first
-    return 'postgresql://postgres:password@localhost/askmate'
+    return 'postgresql://zoli:zoli@localhost/askmate'
     # user_name = os.environ.get('zoli')
     # password = os.environ.get('zoli')
     # host = os.environ.get('localhost')

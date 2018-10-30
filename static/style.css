@@ -54,7 +54,11 @@ a.questions_link{
     text-decoration: none;
     font-weight: bold;
 }
-
+a.delete_link{
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 10px;
+}
 .question{
     text-align: center;
     font-weight: bold;

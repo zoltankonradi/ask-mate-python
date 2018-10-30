@@ -377,7 +377,7 @@ def add_tag(cursor, new_tag):
                     SELECT name FROM tag WHERE name = %(tag)s;
                     """, {'tag': new_tag})
     tag_check = cursor.fetchall()
-    if tag_check is not []:
+    if tag_check != []:
         return
     cursor.execute("""
                     SELECT id FROM question ORDER BY submission_time DESC LIMIT 1;
@@ -479,14 +479,14 @@ def compare_new_tags_to_old_ones(cursor, new_tags_for_question, question_id):
 @connection.connection_handler
 def add_tag_for_existing_question(cursor, new_tag, question_id):
     cursor.execute("""
-                        SELECT name FROM tag WHERE name = %(tag)s;
-                        """, {'tag': new_tag})
+                    SELECT name FROM tag WHERE name = %(tag)s;
+                    """, {'tag': new_tag})
     tag_check = cursor.fetchall()
     if tag_check != []:
         return
     cursor.execute("""
-                      INSERT INTO tag (name) VALUES (%(tag)s);
-                      """, {'tag': new_tag})
+                  INSERT INTO tag (name) VALUES (%(tag)s);
+                  """, {'tag': new_tag})
     cursor.execute("""
                     SELECT id FROM tag ORDER BY id DESC LIMIT 1;
                     """)
@@ -496,3 +496,14 @@ def add_tag_for_existing_question(cursor, new_tag, question_id):
                     INSERT INTO question_tag (question_id, tag_id) VALUES (%(q_id)s, %(t_id)s);
                     """, {'q_id': int(question_id), 't_id': newest_tag_id})
     return newest_tag_id
+
+@connection.connection_handler
+def delete_question_tag(cursor, question_id, tag_id):
+    cursor.execute("""
+                    DELETE FROM question_tag WHERE tag_id = %(t_id)s;
+                   """,
+                   {'t_id': int(tag_id)})
+    cursor.execute("""
+                    DELETE FROM tag WHERE id = %(id)s;
+                   """,
+                   {'id': int(tag_id)})

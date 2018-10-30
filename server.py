@@ -220,6 +220,13 @@ def route_edit_comment_answer(comment_id):
         return redirect(url_for('route_question', question_id=question_id))
 
 
+# KZoli - Delete a tag.
+@app.route("/question/<question_id>/tag/<tag_id>/delete")
+def delete_tag(question_id, tag_id):
+    data_manager.delete_question_tag(question_id, tag_id)
+    return redirect(url_for('route_edit_question', question_id=question_id))
+
+
 if __name__ == "__main__":
     app.run(
         debug=True,
