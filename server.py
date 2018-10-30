@@ -124,7 +124,7 @@ def route_edit_question(question_id):
                 continue
         # If new tag not empty, adds it
         if new_tag != '':
-            data_manager.add_tag_for_existing_question(new_tag, question_id)
+            selected_tags_list.append(data_manager.add_tag_for_existing_question(new_tag, question_id))
         # Compare new tags to old ones.
         data_manager.compare_new_tags_to_old_ones(selected_tags_list, question_id)
         # Updates question data

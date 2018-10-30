@@ -454,19 +454,23 @@ def compare_new_tags_to_old_ones(cursor, new_tags_for_question, question_id):
                     SELECT tag_id FROM question_tag WHERE question_id = %(q_id)s;
                     """, {'q_id': question_id})
     old_tags_for_question = cursor.fetchall()
-    print(old_tags_for_question)
     for i in range(len(old_tags_for_question)):
         old_tags_for_question[i] = old_tags_for_question[i].get('tag_id')
+    for i in range(len(new_tags_for_question)):
+        new_tags_for_question[i]=int(new_tags_for_question[i])
+    for i in range(len(old_tags_for_question)):
+        old_tags_for_question[i]=int(old_tags_for_question[i])
+
     print(old_tags_for_question)
     print(new_tags_for_question)
     for old_tag in old_tags_for_question:
-        if str(old_tag) not in new_tags_for_question:
+        if old_tag not in new_tags_for_question:
             cursor.execute("""
                             DELETE FROM question_tag WHERE question_id = %(id)s AND tag_id = %(old_tag)s;
                            """,
                            {'id': question_id, 'old_tag': old_tag})
     for new_tag in new_tags_for_question:
-        if int(new_tag) not in old_tags_for_question:
+        if new_tag not in old_tags_for_question:
             cursor.execute("""
                           INSERT INTO question_tag (question_id, tag_id) VALUES (%(q_id)s, %(t_id)s);
                           """, {'q_id': question_id, 't_id': new_tag})
@@ -478,7 +482,7 @@ def add_tag_for_existing_question(cursor, new_tag, question_id):
                         SELECT name FROM tag WHERE name = %(tag)s;
                         """, {'tag': new_tag})
     tag_check = cursor.fetchall()
-    if tag_check is not []:
+    if tag_check != []:
         return
     cursor.execute("""
                       INSERT INTO tag (name) VALUES (%(tag)s);
@@ -490,5 +494,5 @@ def add_tag_for_existing_question(cursor, new_tag, question_id):
     newest_tag_id = newest_tag_id[0].get('id')
     cursor.execute("""
                     INSERT INTO question_tag (question_id, tag_id) VALUES (%(q_id)s, %(t_id)s);
-                    """, {'q_id': question_id, 't_id': newest_tag_id})
-
+                    """, {'q_id': int(question_id), 't_id': newest_tag_id})
+    return newest_tag_id
