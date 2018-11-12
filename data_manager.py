@@ -508,3 +508,11 @@ def delete_question_tag(cursor, question_id, tag_id):
                     DELETE FROM tag WHERE id = %(id)s;
                    """,
                    {'id': int(tag_id)})
+
+
+@connection.connection_handler
+def register_new_user(cursor, username, hashed_pw, email):
+    cursor.execute("""
+                    INSERT INTO user (username, pw_hash, email) VALUES (%(name)s, %(password)s, %(email)s);
+                    """, {'name': username, 'password': hashed_pw, 'email': email})
+    return True

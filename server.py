@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 import data_manager
+import util
 
 app = Flask(__name__)
 
@@ -233,9 +234,22 @@ def login():
     return render_template("login_register.html", page='login')
 
 
-@app.route("/register")
+@app.route("/register", methods=['GET', 'POST'])
 def register():
-    return render_template("login_register.html", page='register')
+    if request.method == 'GET':
+        return render_template("login_register.html", page='register')
+    elif request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        password = util.hash_password(password)
+        check_user = data_manager.register_new_user(username, password, email)
+        if check_user is True:
+            # FLASH OF SUCCESSFUL REGISTRATION
+            return redirect(url_for('login', page='login'))
+        elif check_user is False:
+            # FLASH OF UNSUCCESSFUL REGISTRATION
+            return redirect(url_for('register', page='register'))
 
 
 if __name__ == "__main__":
