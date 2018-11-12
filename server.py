@@ -227,6 +227,17 @@ def delete_tag(question_id, tag_id):
     return redirect(url_for('route_edit_question', question_id=question_id))
 
 
+# 3 TW WEEK.
+@app.route("/login")
+def login():
+    return render_template("login_register.html", page='login')
+
+
+@app.route("/register")
+def register():
+    return render_template("login_register.html", page='register')
+
+
 if __name__ == "__main__":
     app.run(
         debug=True,

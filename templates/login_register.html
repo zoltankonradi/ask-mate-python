@@ -1,0 +1,44 @@
+{% block title_content %}
+{% endblock title_content %}
+{% block body_content %}
+{% if page == 'login' %}
+<div class="card">
+    <form method="post" action="/login">
+        <p>
+            Username:
+            <input name="username" type="text" value="">
+        </p>
+        <p>
+            Password:
+            <input name="password" type="password" value="">
+        </p>
+        <p>
+            <input type="submit" value="Login">
+        </p>
+    </form>
+</div>
+{% elif page == 'register'%}
+<div class="card">
+    <form method="post" action="/registration">
+        <p>
+            Username:
+            <input name="username" type="text" value="">
+        </p>
+        <p>
+            Password:
+            <input name="password" type="password" value="">
+        </p>
+        <p>
+            E-mail:
+            <input name="email" type="email" value="">
+        </p>
+        <p>
+            <input type="checkbox" name="agreement" value="Agreement">I accept the user terms and conditions.
+        </p>
+        <p>
+            <input type="submit" value="Register">
+        </p>
+    </form>
+</div>
+{% endif %}
+{% endblock body_content %}

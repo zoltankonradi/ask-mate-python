@@ -188,3 +188,15 @@ ul{
     color: white;
     font-style: italic;
 }
+
+.card{
+    justify-content: center;
+    background-color: white;
+    padding: 25px 5px;
+    border-radius: 3px;
+    vertical-align: top;
+    display: inline-block;
+    box-shadow: 0 1px 20px rgba(0, 0, 0, .9);
+    width: 400px;
+    margin: 20px;
+}

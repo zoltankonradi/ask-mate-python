@@ -456,13 +456,13 @@ def compare_new_tags_to_old_ones(cursor, new_tags_for_question, question_id):
     old_tags_for_question = cursor.fetchall()
     for i in range(len(old_tags_for_question)):
         old_tags_for_question[i] = old_tags_for_question[i].get('tag_id')
-    for i in range(len(new_tags_for_question)):
-        new_tags_for_question[i]=int(new_tags_for_question[i])
-    for i in range(len(old_tags_for_question)):
-        old_tags_for_question[i]=int(old_tags_for_question[i])
-
     print(old_tags_for_question)
+    for i in range(len(new_tags_for_question)):
+        new_tags_for_question[i] = int(new_tags_for_question[i])
     print(new_tags_for_question)
+    for i in range(len(old_tags_for_question)):
+        old_tags_for_question[i] = int(old_tags_for_question[i])
+    print(old_tags_for_question)
     for old_tag in old_tags_for_question:
         if old_tag not in new_tags_for_question:
             cursor.execute("""
@@ -496,6 +496,7 @@ def add_tag_for_existing_question(cursor, new_tag, question_id):
                     INSERT INTO question_tag (question_id, tag_id) VALUES (%(q_id)s, %(t_id)s);
                     """, {'q_id': int(question_id), 't_id': newest_tag_id})
     return newest_tag_id
+
 
 @connection.connection_handler
 def delete_question_tag(cursor, question_id, tag_id):
