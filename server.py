@@ -58,6 +58,9 @@ def route_search():
     user_names = data_manager.find_username_for_questions()
     username = session['username']
     user_id = session['user_id']
+    for data in question_data:
+        data['title'] = util.separate_string(data['title'], search_text)
+    print(question_data)
 
     return render_template("list.html", question_data=question_data, search_mode=search_mode,
                            limit=limit, username=username, user_id=user_id, user_names=user_names, search_text=search_text)
