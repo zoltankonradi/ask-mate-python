@@ -26,6 +26,7 @@ def separate_string(string, substring):
         separated_string.append(string[:index])
         separated_string.append(substring)
         string = string[index+len(substring):]
+    separated_string.append(string)
     for i in range(len(separated_string)):
         if separated_string[i] != '':
             clean_string_list.append(separated_string[i])
