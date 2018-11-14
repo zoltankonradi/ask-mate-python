@@ -163,12 +163,38 @@
     </body>
 {% elif page == 'users' %}
     <body class="profile_users">
-        {% for user in users %}
-            {{ user.username }}
-            {{ user.email }}
-            {{ user.reg_date }}
-            {{ user.reputation }}
-        {% endfor %}
+        <div class="header">
+            <div class="container">
+                <div class="logo">
+                    Ask Mate | Users
+                </div>
+                <div class="navigation">
+                    <a href="/" class="nav_link">Go back</a>
+                </div>
+            </div>
+        </div>
+        <div class="container_for_user_contributions">
+            <table class="fixed" align="center">
+                <col width="100px" />
+                <col width="250px" />
+                <col width="250px" />
+                <col width="30px" />
+                <tr>
+                    <th>Username</th>
+                    <th>E-mail</th>
+                    <th>Join date</th>
+                    <th>Reputation</th>
+                </tr>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.reg_date }}</td>
+                    <td>{{ user.reputation }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
         <div class="limit" align="center">
             <a class="limit_link" href = "/">Back to questions</a>
         </div>

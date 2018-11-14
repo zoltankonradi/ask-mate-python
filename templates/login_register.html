@@ -27,6 +27,11 @@
                 <a id="register_button" href="/registration">Register</a>
             </p>
             <input type="hidden" value="{{ request.args.get('next', '') }}"/>
+            {% if message %}
+            <div class="error_message">
+                {{ message }}
+            </div>
+            {% endif %}
         </form>
     </div>
 </body>
@@ -52,6 +57,11 @@
             <p>
                 <input type="submit" value="Register">
             </p>
+            {% if message %}
+            <div class="error_message">
+                {{ message }}
+            </div>
+            {% endif %}
         </form>
     </div>
 </body>
