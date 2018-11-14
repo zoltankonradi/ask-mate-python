@@ -551,13 +551,12 @@ def register_new_user(cursor, username, hashed_pw, email):
     for data in users:
         if username in data.get('username') or email in data.get('email'):
             return False
-        else:
-            reg_time = util.generate_time()
-            cursor.execute("""
-                            INSERT INTO "user" (username, pw_hash, email, reg_date, reputation) VALUES (%(name)s, 
-                            %(password)s, %(email)s, %(time)s, %(rep)s);
-                            """, {'name': username, 'password': hashed_pw, 'email': email, 'time': reg_time, 'rep': 0})
-            return True
+    reg_time = util.generate_time()
+    cursor.execute("""
+                    INSERT INTO "user" (username, pw_hash, email, reg_date, reputation) VALUES (%(name)s, 
+                    %(password)s, %(email)s, %(time)s, %(rep)s);
+                    """, {'name': username, 'password': hashed_pw, 'email': email, 'time': reg_time, 'rep': 0})
+    return True
 
 
 @connection.connection_handler

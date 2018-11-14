@@ -86,7 +86,11 @@
                 </td>
                 <td>
                     <a class="questions_link" href="/question/{{ data.id }}">
-                        <div class="questions_list_title">{{ data.title }}</div>
+                        <div class="questions_list_title">
+                            {{ data.title[:data.title.find(search_text)] }}
+                            <mark>{{ data.title[ data.title.find(search_text) : data.title.find(search_text) + search_text|length ] }}</mark>
+                            {{ data.title[ data.title.find(search_text) + search_text|length : ] }}
+                        </div>
                     </a>
                     {% for user in user_names %}
                         {% if user.id == data.user_id %}
