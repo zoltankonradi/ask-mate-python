@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+{% block title_content %}
+<title>Ask Mate|Tags</title>
+{% endblock title_content %}
+{% block body_content %}
+<body class="profile_users">
+    <div class="header">
+        <div class="container">
+            <div class="logo">
+                Ask Mate | Tags
+            </div>
+            <div class="navigation">
+                <a href="/" class="nav_link">Go back</a>
+            </div>
+        </div>
+    </div>
+    <table class="container_for_user_tags" align="center">
+        <tr>
+            <th>Tag name</th>
+            <th>Number of questions marked</th>
+        </tr>
+        {% for tag in every_tag %}
+        <tr>
+            <td>{{ tag.name }}</td>
+            <td>{{ tag.count }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+{% endblock body_content %}

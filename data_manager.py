@@ -642,7 +642,7 @@ def title_for_my_comments_answers(cursor, user_id):
     cursor.execute("""
                     SELECT question.title, comment.message FROM question INNER JOIN answer ON question.id =
                     answer.question_id INNER JOIN comment ON comment.answer_id = answer.id WHERE answer.user_id = %(u_id)s;
-                    """, {'u_id': user_id});
+                    """, {'u_id': user_id})
     return cursor.fetchall()
 
 
@@ -651,5 +651,21 @@ def title_for_my_comments_questions(cursor, user_id):
     cursor.execute("""
                     SELECT question.title, comment.message FROM question INNER JOIN comment ON question.id =
                     comment.question_id WHERE question.user_id = %(u_id)s;
-                    """, {'u_id': user_id});
+                    """, {'u_id': user_id})
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def count_tags(cursor):
+    cursor.execute("""
+                    SELECT tag_id, COUNT(tag_id) FROM question_tag GROUP BY tag_id;
+                    """)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_tags(cursor):
+    cursor.execute("""
+                    SELECT * FROM tag;
+                    """)
     return cursor.fetchall()

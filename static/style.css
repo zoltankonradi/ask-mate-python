@@ -338,6 +338,19 @@ body.profile_users{
     text-align: center;
 }
 
+.container_for_user_tags td{
+    background-color: white;
+    padding: 10px 10px;
+    text-align: center;
+}
+
+.error_message{
+    font-weight: bold;
+    color: darkred;
+    text-align: center;
+    font-size: 11px;
+}
+
 
 
 

@@ -292,8 +292,7 @@ def login():
             session['user_id'] = check_user[1]
             return redirect(url_for('route_list'))
         else:
-            return redirect(url_for('login'))
-
+            return render_template("login_register.html", page='login', message='Invalid username or password')
 
 
 @app.route("/logout")
@@ -316,7 +315,7 @@ def register():
         if check_user is True:
             return redirect(url_for('login', page='login'))
         elif check_user is False:
-            return redirect(url_for('register', page='register'))
+            return render_template("login_register.html", page='register', message='Username or e-mail in use')
 
 
 @app.route("/user/<user_id>")
@@ -341,6 +340,21 @@ def user_profile(user_id):
 def users_list():
     users = data_manager.get_all_users()
     return render_template('profile_users.html', page='users', users=users)
+
+
+@app.route("/tags")
+@login_required
+def tags():
+    tags_counted = data_manager.count_tags()
+    every_tag = data_manager.get_tags()
+    for id in every_tag:
+        for tag_id in tags_counted:
+            if id['id'] != tag_id['tag_id']:
+                id['count'] = 0
+            else:
+                id['count'] = tag_id['count']
+                break
+    return render_template('tags.html', every_tag=every_tag)
 
 
 if __name__ == "__main__":
