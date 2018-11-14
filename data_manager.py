@@ -193,10 +193,26 @@ def update_votes_question(cursor, question_id, vote):
         cursor.execute("""
                         UPDATE question SET vote_number = vote_number + 1 WHERE id = %(id)s;""",
                        {'id': int(question_id)})
+        cursor.execute("""
+                        SELECT user_id FROM question WHERE id = %(q_id)s;
+                       """, {'q_id': int(question_id)})
+        user_id = cursor.fetchall()
+        user_id = user_id[0].get('user_id')
+        cursor.execute("""
+                        UPDATE "user" SET reputation = reputation + 5 WHERE id = %(id)s;""",
+                       {'id': int(user_id)})
     else:
         cursor.execute("""
                         UPDATE question SET vote_number = vote_number - 1 WHERE id = %(id)s;""",
                        {'id': int(question_id)})
+        cursor.execute("""
+                        SELECT user_id FROM question WHERE id = %(q_id)s;
+                       """, {'q_id': int(question_id)})
+        user_id = cursor.fetchall()
+        user_id = user_id[0].get('user_id')
+        cursor.execute("""
+                        UPDATE "user" SET reputation = reputation - 2 WHERE id = %(id)s;""",
+                       {'id': int(user_id)})
 
 
 # KZoli - Update votes on an answer.
@@ -206,10 +222,26 @@ def update_votes_answer(cursor, vote, answer_id):
         cursor.execute("""
                         UPDATE answer SET vote_number = vote_number + 1 WHERE id = %(id)s;""",
                        {'id': int(answer_id)})
+        cursor.execute("""
+                        SELECT user_id FROM answer WHERE id = %(a_id)s;
+                       """, {'a_id': int(answer_id)})
+        user_id = cursor.fetchall()
+        user_id = user_id[0].get('user_id')
+        cursor.execute("""
+                        UPDATE "user" SET reputation = reputation + 10 WHERE id = %(id)s;""",
+                       {'id': int(user_id)})
     else:
         cursor.execute("""
                         UPDATE answer SET vote_number = vote_number - 1 WHERE id = %(id)s;""",
                        {'id': int(answer_id)})
+        cursor.execute("""
+                        SELECT user_id FROM answer WHERE id = %(a_id)s;
+                       """, {'a_id': int(answer_id)})
+        user_id = cursor.fetchall()
+        user_id = user_id[0].get('user_id')
+        cursor.execute("""
+                        UPDATE "user" SET reputation = reputation - 2 WHERE id = %(id)s;""",
+                       {'id': int(user_id)})
 
 
 # KZoli - View counter.
