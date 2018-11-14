@@ -292,6 +292,7 @@ def login():
             return redirect(url_for('login'))
 
 
+
 @app.route("/logout")
 @login_required
 def logout():
