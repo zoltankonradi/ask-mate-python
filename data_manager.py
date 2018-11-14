@@ -8,60 +8,60 @@ def question_reader(cursor, order, limit):
     if limit is True:
         if order == 'DESC_BY_TIME':
             cursor.execute("""
-                            SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY submission_time DESC LIMIT 5;
+                            SELECT id, vote_number, title, submission_time, view_number, user_id FROM question ORDER BY submission_time DESC LIMIT 5;
                            """)
         elif order == 'ASC_BY_TIME':
             cursor.execute("""
-                            SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY submission_time ASC LIMIT 5;
+                            SELECT id, vote_number, title, submission_time, view_number, user_id FROM question ORDER BY submission_time ASC LIMIT 5;
                            """)
         elif order == 'ASC_BY_VOTES':
             cursor.execute("""
-                            SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY vote_number ASC LIMIT 5;
+                            SELECT id, vote_number, title, submission_time, view_number, user_id FROM question ORDER BY vote_number ASC LIMIT 5;
                            """)
         elif order == 'DESC_BY_VOTES':
             cursor.execute("""
-                            SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY vote_number DESC LIMIT 5;
+                            SELECT id, vote_number, title, submission_time, view_number, user_id FROM question ORDER BY vote_number DESC LIMIT 5;
                            """)
         elif order == 'ASC_BY_VIEWS':
             cursor.execute("""
-                            SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY view_number ASC LIMIT 5;
+                            SELECT id, vote_number, title, submission_time, view_number, user_id FROM question ORDER BY view_number ASC LIMIT 5;
                            """)
         elif order == 'DESC_BY_VIEWS':
             cursor.execute("""
-                            SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY view_number DESC LIMIT 5;
+                            SELECT id, vote_number, title, submission_time, view_number, user_id FROM question ORDER BY view_number DESC LIMIT 5;
                            """)
         else:
             cursor.execute("""
-                            SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY submission_time DESC LIMIT 5;
+                            SELECT id, vote_number, title, submission_time, view_number, user_id FROM question ORDER BY submission_time DESC LIMIT 5;
                            """)
     else:
         if order == 'DESC_BY_TIME':
             cursor.execute("""
-                            SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY submission_time DESC;
+                            SELECT id, vote_number, title, submission_time, view_number, user_id FROM question ORDER BY submission_time DESC;
                            """)
         elif order == 'ASC_BY_TIME':
             cursor.execute("""
-                            SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY submission_time ASC;
+                            SELECT id, vote_number, title, submission_time, view_number, user_id FROM question ORDER BY submission_time ASC;
                            """)
         elif order == 'ASC_BY_VOTES':
             cursor.execute("""
-                            SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY vote_number ASC;
+                            SELECT id, vote_number, title, submission_time, view_number, user_id FROM question ORDER BY vote_number ASC;
                            """)
         elif order == 'DESC_BY_VOTES':
             cursor.execute("""
-                            SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY vote_number DESC;
+                            SELECT id, vote_number, title, submission_time, view_number, user_id FROM question ORDER BY vote_number DESC;
                            """)
         elif order == 'ASC_BY_VIEWS':
             cursor.execute("""
-                            SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY view_number ASC;
+                            SELECT id, vote_number, title, submission_time, view_number, user_id FROM question ORDER BY view_number ASC;
                            """)
         elif order == 'DESC_BY_VIEWS':
             cursor.execute("""
-                            SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY view_number DESC;
+                            SELECT id, vote_number, title, submission_time, view_number, user_id FROM question ORDER BY view_number DESC;
                            """)
         else:
             cursor.execute("""
-                            SELECT id, vote_number, title, submission_time, view_number FROM question ORDER BY submission_time DESC;
+                            SELECT id, vote_number, title, submission_time, view_number, user_id FROM question ORDER BY submission_time DESC;
                            """)
     question_data = cursor.fetchall()
     return question_data
@@ -69,19 +69,19 @@ def question_reader(cursor, order, limit):
 
 # KZoli - Add new question.
 @connection.connection_handler
-def add_question(cursor, subject, text, picture_url):
+def add_question(cursor, subject, text, picture_url, user_id):
     time = util.generate_time()
-    cursor.execute("""INSERT INTO question (submission_time, view_number, vote_number, title, message, image) 
-                          VALUES (%(sub_time)s, %(views)s, %(votes)s, %(subject)s, %(text)s, %(image)s);""",
+    cursor.execute("""INSERT INTO question (submission_time, view_number, vote_number, title, message, image, user_id) 
+                          VALUES (%(sub_time)s, %(views)s, %(votes)s, %(subject)s, %(text)s, %(image)s, %(u_id)s);""",
                    {'sub_time': time, 'views': 0, 'votes': 0, 'subject': subject,
-                    'text': text, 'image': picture_url})
+                    'text': text, 'image': picture_url, 'u_id': user_id})
 
 
 # KZoli - Lists all the answers.
 @connection.connection_handler
 def answer_reader(cursor, question_id):
     cursor.execute("""
-                    SELECT id, submission_time, vote_number, question_id, message, image FROM answer 
+                    SELECT id, submission_time, vote_number, question_id, message, image, user_id FROM answer 
                     WHERE question_id = %(q_id)s ORDER BY submission_time ASC;
                    """, {'q_id': int(question_id)})
     answer_data = cursor.fetchall()
@@ -113,11 +113,11 @@ def find_question_for_answer(cursor, question_id):
 
 # KZoli - Post an answer.
 @connection.connection_handler
-def post_answer(cursor, question_id, text, image):
+def post_answer(cursor, question_id, text, image, user_id):
     time = util.generate_time()
-    cursor.execute("""INSERT INTO answer (submission_time, vote_number, question_id, message, image) 
-                      VALUES (%(sub_time)s, %(votes)s, %(q_id)s, %(text)s, %(image_url)s);""",
-                   {'sub_time': time, 'votes': 0, 'q_id': question_id, 'text': text, 'image_url': image})
+    cursor.execute("""INSERT INTO answer (submission_time, vote_number, question_id, message, image, user_id) 
+                      VALUES (%(sub_time)s, %(votes)s, %(q_id)s, %(text)s, %(image_url)s, %(u_id)s);""",
+                   {'sub_time': time, 'votes': 0, 'q_id': question_id, 'text': text, 'image_url': image, 'u_id': user_id})
 
 
 # KZoli - Delete an answer.
@@ -220,25 +220,25 @@ def update_views(cursor, question_id):
                    {'id': int(question_id)})
 
 
-# KZoli - Posts a commment.
+# KZoli - Posts a comment.
 @connection.connection_handler
-def post_comment(cursor, comment_id, comment, comment_type):
+def post_comment(cursor, comment_id, comment, comment_type, user_id):
     submission_time = util.generate_time()
     if comment_type == 'question':
-        cursor.execute("""INSERT INTO comment (submission_time, question_id, message, edited_count) 
-                          VALUES (%(sub_time)s, %(q_id)s, %(text)s, %(edit)s);""",
-                       {'sub_time': submission_time, 'q_id': comment_id, 'text': comment, 'edit': 0})
+        cursor.execute("""INSERT INTO comment (submission_time, question_id, message, edited_count, user_id) 
+                          VALUES (%(sub_time)s, %(q_id)s, %(text)s, %(edit)s, %(u_id)s);""",
+                       {'sub_time': submission_time, 'q_id': comment_id, 'text': comment, 'edit': 0, 'u_id': user_id})
     else:
-        cursor.execute("""INSERT INTO comment (submission_time, answer_id, message, edited_count) 
-                          VALUES (%(sub_time)s, %(q_id)s, %(text)s, %(edit)s);""",
-                       {'sub_time': submission_time, 'q_id': comment_id, 'text': comment, 'edit': 0})
+        cursor.execute("""INSERT INTO comment (submission_time, answer_id, message, edited_count, user_id) 
+                          VALUES (%(sub_time)s, %(q_id)s, %(text)s, %(edit)s, %(u_id)s);""",
+                       {'sub_time': submission_time, 'q_id': comment_id, 'text': comment, 'edit': 0, 'u_id': user_id})
 
 
 # KZoli - Reads comments for questions.
 @connection.connection_handler
 def question_comment_reader(cursor, question_id):
     cursor.execute("""
-                    SELECT id, question_id, submission_time, message, edited_count FROM comment 
+                    SELECT id, question_id, submission_time, message, edited_count, user_id FROM comment 
                     WHERE question_id = %(q_id)s ORDER BY submission_time DESC;
                    """, {'q_id': int(question_id)})
     comment = cursor.fetchall()
@@ -355,7 +355,7 @@ def increase_edit_counter(cursor, comment_id):
 def search(cursor, search_text):
     search_text = '%' + search_text + '%'
     cursor.execute("""
-                    SELECT id, vote_number, title, submission_time, view_number FROM question
+                    SELECT id, vote_number, title, submission_time, view_number, user_id FROM question
                     WHERE LOWER(title) LIKE %(text)s OR message LIKE %(text)s;
                    """, {'text': search_text})
     search_result = cursor.fetchall()
@@ -513,6 +513,112 @@ def delete_question_tag(cursor, question_id, tag_id):
 @connection.connection_handler
 def register_new_user(cursor, username, hashed_pw, email):
     cursor.execute("""
-                    INSERT INTO user (username, pw_hash, email) VALUES (%(name)s, %(password)s, %(email)s);
-                    """, {'name': username, 'password': hashed_pw, 'email': email})
-    return True
+                    SELECT * FROM "user";
+                    """)
+    users = cursor.fetchall()
+    for data in users:
+        if username in data.get('username') or email in data.get('email'):
+            return False
+        else:
+            reg_time = util.generate_time()
+            cursor.execute("""
+                            INSERT INTO "user" (username, pw_hash, email, reg_date, reputation) VALUES (%(name)s, 
+                            %(password)s, %(email)s, %(time)s, %(rep)s);
+                            """, {'name': username, 'password': hashed_pw, 'email': email, 'time': reg_time, 'rep': 0})
+            return True
+
+
+@connection.connection_handler
+def user_login(cursor, username, password):
+    cursor.execute("""
+                    SELECT * FROM "user";
+                    """)
+    users = cursor.fetchall()
+    for data in users:
+        if username == data['username']:
+            if util.verify_password(password, data['pw_hash']) is True:
+                return [True, data['id']]
+            if util.verify_password(password, data['pw_hash']) is False:
+                return [False, data['id']]
+    return [False, data['id']]
+
+
+@connection.connection_handler
+def get_all_users(cursor):
+    cursor.execute("""
+                    SELECT username, email, reg_date, reputation FROM "user";
+                    """)
+    users = cursor.fetchall()
+    return users
+
+
+@connection.connection_handler
+def get_user_by_id(cursor, user_id):
+    cursor.execute("""
+                    SELECT username, email, reg_date, reputation FROM "user" WHERE id = %(user_id)s;
+                    """, {'user_id': user_id})
+    user_info = cursor.fetchall()
+    return user_info
+
+
+@connection.connection_handler
+def find_username_for_questions(cursor):
+    cursor.execute("""
+                    SELECT id, username FROM "user";
+                    """)
+    user_info = cursor.fetchall()
+    return user_info
+
+
+@connection.connection_handler
+def find_all_questions_with_user_id(cursor, user_id):
+    cursor.execute("""
+                    SELECT * FROM question WHERE user_id = %(u_id)s;
+                    """, {'u_id': user_id})
+    user_info = cursor.fetchall()
+    return user_info
+
+
+@connection.connection_handler
+def find_all_answers_with_user_id(cursor, user_id):
+    cursor.execute("""
+                    SELECT * FROM answer WHERE user_id = %(u_id)s;
+                    """, {'u_id': user_id})
+    user_info = cursor.fetchall()
+    return user_info
+
+
+@connection.connection_handler
+def find_all_comments_with_user_id(cursor, user_id):
+    cursor.execute("""
+                    SELECT * FROM comment WHERE user_id = %(u_id)s;
+                    """, {'u_id': user_id})
+    user_info = cursor.fetchall()
+    return user_info
+
+
+@connection.connection_handler
+def title_for_my_answers(cursor, user_id):
+    cursor.execute("""
+                    SELECT question.title, answer.id FROM question INNER JOIN answer ON question.id =
+                    answer.question_id WHERE answer.user_id = %(u_id)s;
+                    """, {'u_id': user_id})
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def title_for_my_comments_answers(cursor, user_id):
+    cursor.execute("""
+                    SELECT question.title, comment.message FROM question INNER JOIN answer ON question.id =
+                    answer.question_id INNER JOIN comment ON comment.answer_id = answer.id WHERE answer.user_id = %(u_id)s;
+                    """, {'u_id': user_id});
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def title_for_my_comments_questions(cursor, user_id):
+    cursor.execute("""
+                    SELECT question.title, comment.message FROM question INNER JOIN comment ON question.id =
+                    comment.question_id WHERE question.user_id = %(u_id)s;
+                    """, {'u_id': user_id});
+    return cursor.fetchall()

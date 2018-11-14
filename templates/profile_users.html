@@ -1,0 +1,177 @@
+{% extends 'layout.html' %}
+{% block title_content %}
+    {% if page == 'profile' %}
+        <title>Ask Mate|Profile</title>
+    {% elif page == 'users' %}
+        <title>Ask Mate|Users</title>
+    {% endif %}
+{% endblock title_content %}
+{% block body_content %}
+{% if page == 'profile' %}
+    <body class="profile_users">
+        <div class="header">
+            <div class="container">
+                <div class="logo">
+                    Ask Mate | Profile
+                </div>
+                <div class="navigation">
+                    <a href="/" class="nav_link">Go back</a>
+                </div>
+            </div>
+        </div>
+        <div class="container_for_profile">
+            {% for info in user %}
+            <div id="profile_picture">
+                <img src="/static/user_picture.svg" height="140">
+            </div>
+            <div id="profile_description_text">
+                <ul>
+                    <li>Username:</li>
+                    <li>E-mail:</li>
+                    <li>Join date:</li>
+                    <li>Reputation:</li>
+                </ul>
+            </div>
+            <div id="profile_description">
+                <ul>
+                    <li>{{ info.username }}</li>
+                    <li>{{ info.email }}</li>
+                    <li>{{ info.reg_date }}</li>
+                    <li>{{ info.reputation }}</li>
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="title_for_user_contributions">My questions:</div>
+        {% if every_question|length > 0 %}
+        <div class="container_for_user_contributions">
+            <table class="fixed">
+                <col width="40px" />
+                <col width="650px" />
+                <col width="250px" />
+                <col width="30px" />
+                <tr>
+                    <th> </th>
+                    <th>Title</th>
+                    <th>Submission time</th>
+                    <th>Votes</th>
+                </tr>
+                {% for question in every_question %}
+                <tr>
+                    <td>
+                        <a class="questions_link" href="/question/{{ question.id }}">
+                            <div class="questions_list_title">LINK</div>
+                        </a>
+                    </td>
+                    <td>{{ question.title }}</td>
+                    <td>{{ question.submission_time }}</td>
+                    <td>{{ question.vote_number }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% else %}
+            <div class="not_posted_yet">No question posted yet!</div>
+        {% endif %}
+        <br>
+        <div class="title_for_user_contributions">My answers:</div>
+        <div class="container_for_user_contributions">
+        {% if every_answer|length > 0 %}
+            <div class="container_for_user_contributions">
+                <table class="fixed">
+                    <col width="40px" />
+                    <col width="400px" />
+                    <col width="300px" />
+                    <col width="200px" />
+                    <col width="30px" />
+                    <tr>
+                        <th> </th>
+                        <th>Question</th>
+                        <th>Answer</th>
+                        <th>Submission time</th>
+                        <th>Votes</th>
+                    </tr>
+                    {% for answer in every_answer %}
+                    <tr>
+                        <td>
+                            <a class="questions_link" href="/question/{{ answer.question_id }}">
+                                <div class="questions_list_title">LINK</div>
+                            </a>
+                        </td>
+                        <td>
+                            {% for titles in title_for_my_answers %}
+                                {% if answer.id == titles.id %}
+                                    {{ titles.title }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ answer.message }}</td>
+                        <td>{{ answer.submission_time }}</td>
+                        <td>{{ answer.vote_number }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% else %}
+            <div class="not_posted_yet">No answer posted yet!</div>
+        {% endif %}
+        </div>
+        <br>
+        <div class="title_for_user_contributions">My comments:</div>
+        <div class="container_for_user_contributions">
+        {% if every_comment|length > 0 %}
+        <div class="container_for_user_contributions">
+            <table class="fixed">
+                <col width="40px" />
+                <col width="455px" />
+                <col width="300px" />
+                <col width="200px" />
+                <tr>
+                    <th> </th>
+                    <th>Question</th>
+                    <th>Comment</th>
+                    <th>Submission time</th>
+                </tr>
+                {% for comment in every_comment %}
+                <tr>
+                    {% if comment.question_id != None %}
+                    <td>
+                        <a class="questions_link" href="/question/{{ comment.question_id }}">
+                            <div class="questions_list_title">LINK</div>
+                        </a>
+                    </td>
+                    {% else %}
+                    <td>
+                        <a class="questions_link" href="/question/{% for i in every_answer %}{% if i.id == comment.answer_id %}{{ i.question_id }}{% endif %}{% endfor %}">
+                            <div class="questions_list_title">LINK</div>
+                        </a>
+                    </td>
+                    {% endif %}
+                    <td>
+                        title needed
+                    </td>
+                    <td>{{ comment.message }}</td>
+                    <td>{{ comment.submission_time }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% else %}
+            <div class="not_posted_yet">No comment posted yet!</div>
+        {% endif %}
+        </div>
+    </body>
+{% elif page == 'users' %}
+    <body class="profile_users">
+        {% for user in users %}
+            {{ user.username }}
+            {{ user.email }}
+            {{ user.reg_date }}
+            {{ user.reputation }}
+        {% endfor %}
+        <div class="limit" align="center">
+            <a class="limit_link" href = "/">Back to questions</a>
+        </div>
+    </body>
+{% endif %}
+{% endblock body_content %}

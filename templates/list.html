@@ -18,7 +18,9 @@
 <div class="header">
     <div class="container">
         <div class="logo">
-            Ask Mate
+            <div id="main">
+              <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Ask Mate</span>
+            </div>
         </div>
         <div class="navigation">
             <a href="/ask-question" class="nav_link">Ask a question</a>
@@ -28,132 +30,166 @@
 {% endif %}
 {% endblock h1_content %}
 {% block body_content %}
-{% if search_mode == True %}
-<table align="center" class="fixed">
-    <col width="25px" />
-    <col width="20px" />
-    <col width="20px" />
-    <col width="600px" />
-    <col width="185px" />
-    <col width="40px" />
-    <tr>
-        <th> </th>
-        <th>ID</th>
-        <th>Votes</th>
-        <th>Title</th>
-        <th>Submission Time</th>
-        <th>Views</th>
-    </tr>
-	{% for data in question_data %}
+<body>
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <div id="user_pic"><img src="/static/user_picture.svg" height="90"></div>
+      <div id="username">{{ username }}</div>
+      <a href="/user/{{ user_id }}">Profile</a>
+      <a href="/users">Users</a>
+      <a href="/tags">Tags</a>
+      <a href="/logout">Logout</a>
+    </div>
+
+    <script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "160px";
+        document.getElementById("main").style.marginLeft = "160px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("main").style.marginLeft= "0";
+    }
+    </script>
+
+    {% if search_mode == True %}
+    <table align="center" class="fixed">
+        <col width="25px" />
+        <col width="20px" />
+        <col width="20px" />
+        <col width="600px" />
+        <col width="185px" />
+        <col width="40px" />
         <tr>
-            <td>
-                <div class="questions_list">
-                    <a href="/{{ data.id }}">
-                        <img src="/static/delete.png" height="15">
-                    </a>
-                </div>
-            </td>
-            <td>
-                <div class="questions_list">{{ data.id }}</div>
-            </td>
-            <td>
-                <div class="questions_list">{{ data.vote_number }}</div>
-            </td>
-            <td>
-                <a class="questions_link" href="/question/{{ data.id }}">
-                    <div class="questions_list">{{ data.title }}</div>
-                </a>
-            </td>
-            <td>
-                <div class="questions_list">{{ data.submission_time }}</div>
-            </td>
-            <td>
-                <div class="questions_list">{{ data.view_number }}</div>
-            </td>
+            <th> </th>
+            <th>ID</th>
+            <th>Votes</th>
+            <th>Title</th>
+            <th>Submission Time</th>
+            <th>Views</th>
         </tr>
-	{% endfor %}
-</table>
-{% else %}
-<h4>
-    <br>
-	List of user questions:
-    {% if limit == True %}
-	<form action="/" method="GET">
+        {% for data in question_data %}
+            <tr>
+                <td>
+                    <div class="questions_list">
+                        <a href="/{{ data.id }}">
+                            <img src="/static/delete.png" height="15">
+                        </a>
+                    </div>
+                </td>
+                <td>
+                    <div class="questions_list">{{ data.id }}</div>
+                </td>
+                <td>
+                    <div class="questions_list">{{ data.vote_number }}</div>
+                </td>
+                <td>
+                    <a class="questions_link" href="/question/{{ data.id }}">
+                        <div class="questions_list_title">{{ data.title }}</div>
+                    </a>
+                    {% for user in user_names %}
+                        {% if user.id == data.user_id %}
+                            <div class="user_names_for_questions">by {{ user.username }}</div>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <div class="questions_list">{{ data.submission_time }}</div>
+                </td>
+                <td>
+                    <div class="questions_list">{{ data.view_number }}</div>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
     {% else %}
-    <form action="/list" method="GET">
-    {% endif %}
-		<select name="select_order">
-			<option value="" disabled selected hidden>
-				Select ordering
-			</option>
-			<option value="DESC_BY_TIME">Newest</option>
-			<option value="ASC_BY_TIME">Oldest</option>
-            <option value="DESC_BY_VOTES">Highest rated</option>
-			<option value="ASC_BY_VOTES">Lowest rated</option>
-            <option value="DESC_BY_VIEWS">Most viewed</option>
-			<option value="ASC_BY_VIEWS">Least viewed</option>
-		</select>
-		<input type="submit" value="Submit">
-	</form>
-</h4>
-<div class="search" align="center">
-    <form action="/search" method="GET">
-        <input type="text" name="q" value="">
-        <input name="Name" type="submit" value="Search">
-    </form>
-</div>
-<table align="center" class="fixed">
-    <col width="25px" />
-    <col width="20px" />
-    <col width="20px" />
-    <col width="600px" />
-    <col width="185px" />
-    <col width="40px" />
-    <tr>
-        <th> </th>
-        <th>ID</th>
-        <th>Votes</th>
-        <th>Title</th>
-        <th>Submission Time</th>
-        <th>Views</th>
-    </tr>
-	{% for data in question_data %}
+    <h4>
+        <br>
+        List of user questions:
+        {% if limit == True %}
+        <form action="/" method="GET">
+        {% else %}
+        <form action="/list" method="GET">
+        {% endif %}
+            <select name="select_order">
+                <option value="" disabled selected hidden>
+                    Select ordering
+                </option>
+                <option value="DESC_BY_TIME">Newest</option>
+                <option value="ASC_BY_TIME">Oldest</option>
+                <option value="DESC_BY_VOTES">Highest rated</option>
+                <option value="ASC_BY_VOTES">Lowest rated</option>
+                <option value="DESC_BY_VIEWS">Most viewed</option>
+                <option value="ASC_BY_VIEWS">Least viewed</option>
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+    </h4>
+    <div class="search" align="center">
+        <form action="/search" method="GET">
+            <input type="text" name="q" value="">
+            <input name="Name" type="submit" value="Search">
+        </form>
+    </div>
+    <table align="center" class="fixed">
+        <col width="25px" />
+        <col width="20px" />
+        <col width="20px" />
+        <col width="600px" />
+        <col width="185px" />
+        <col width="40px" />
         <tr>
-            <td>
-                <div class="questions_list">
-                    <a href="/{{ data.id }}">
-                        <img src="/static/delete.png" height="15">
-                    </a>
-                </div>
-            </td>
-            <td>
-                <div class="questions_list">{{ data.id }}</div>
-            </td>
-            <td>
-                <div class="questions_list">{{ data.vote_number }}</div>
-            </td>
-            <td>
-                <a class="questions_link" href="/question/{{ data.id }}">
-                    <div class="questions_list">{{ data.title }}</div>
-                </a>
-            </td>
-            <td>
-                <div class="questions_list">{{ data.submission_time }}</div>
-            </td>
-            <td>
-                <div class="questions_list">{{ data.view_number }}</div>
-            </td>
+            <th> </th>
+            <th>ID</th>
+            <th>Votes</th>
+            <th>Title</th>
+            <th>Submission Time</th>
+            <th>Views</th>
         </tr>
-	{% endfor %}
-</table>
-    {% if limit == True %}
-        <div class="limit" align="center">
-            <a href="/list" class="limit_link">Show all questions</a>
-        </div>
-    {% else %}
-        <div class="limit" align="center">
-            <a href="/" class="limit_link">Limit questions</a>
-        </div>
+        {% for data in question_data %}
+            <tr>
+                <td>
+                    <div class="questions_list">
+                        <a href="/{{ data.id }}">
+                            <img src="/static/delete.png" height="15">
+                        </a>
+                    </div>
+                </td>
+                <td>
+                    <div class="questions_list">{{ data.id }}</div>
+                </td>
+                <td>
+                    <div class="questions_list">{{ data.vote_number }}</div>
+                </td>
+                <td>
+                    <a class="questions_link" href="/question/{{ data.id }}">
+                        <div class="questions_list_title">{{ data.title }}</div>
+                    </a>
+                    {% for user in user_names %}
+                        {% if user.id == data.user_id %}
+                            <div class="user_names_for_questions">by {{ user.username }}</div>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <div class="questions_list">{{ data.submission_time }}</div>
+                </td>
+                <td>
+                    <div class="questions_list">{{ data.view_number }}</div>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+        {% if limit == True %}
+            <div class="limit" align="center">
+                <a href="/list" class="limit_link">Show all questions</a>
+            </div>
+        {% else %}
+            <div class="limit" align="center">
+                <a href="/" class="limit_link">Limit questions</a>
+            </div>
+        {% endif %}
     {% endif %}
-{% endif %}
+</body>
 {% endblock body_content %}

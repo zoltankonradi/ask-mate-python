@@ -29,182 +29,198 @@
 </div>
 {% endblock h1_content %}
 {% block body_content %}
-<br>
-<p>
-    <div class="question" align="center">
-        {% for data in question %}
-            {{ data.message }}<br>
-            {% if data.image != "" %}
-                <p>
-                    <img src="{{ data.image }}" height="200"/>
-                </p>
-            {% else %}
+<body>
+    <br>
+    <p>
+        <div class="question" align="center">
+            {% for data in question %}
+                {{ data.message }}<br>
+                {% if data.image != "" %}
+                    <p>
+                        <img src="{{ data.image }}" height="200"/>
+                    </p>
+                {% else %}
+                {% endif %}
+            {% endfor %}
+            <hr>
+        </div>
+        <table align="center" class="fixed">
+            <col width="300px" />
+            <col width="150px" />
+            <col width="20px" />
+            <col width="30px" />
+            <col width="50px" />
+            {% if comment_question != [] %}
+                <tr>
+                    <th>Comment</th>
+                    <th>Submission time</th>
+                    <th>Edits</th>
+                </tr>
             {% endif %}
-        {% endfor %}
-        <hr>
-    </div>
-    <table align="center" class="fixed">
-        <col width="300px" />
-        <col width="150px" />
-        <col width="20px" />
-        <col width="30px" />
-        <col width="50px" />
-        {% if comment_question != [] %}
-            <tr>
-                <th>Comment</th>
-                <th>Submission time</th>
-                <th>Edits</th>
-            </tr>
-        {% endif %}
-        {% for comment in comment_question %}
-            <tr>
-                <td>
-                    <div class="question_comment">
-                        {{ comment.message }}
-                    </div>
-                </td>
-                <td>
-                    <div class="question_comment">
-                        {{ comment.submission_time }}
-                    </div>
-                </td>
-                <td>
-                    <div class="question_comment">
-                        {{ comment.edited_count}}
-                    </div>
-                </td>
-                <td>
-                    <div class="question_comment">
-                        <a href="/comments/{{ comment.id }}/{{ comment.question_id }}/delete">
-                            <img src="/static/delete.png" height="11">
-                        </a>
-                    </div>
-                </td>
-                <td>
-                    <div class="question_comment">
-                        <a class="questions_link" href="/comments/{{ comment.id }}/edit/q">Edit</a>
-                    </div>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-</p>
-<p>
-    <table align="center" class="fixed">
-        <col width="20px" />
-        <col width="20px" />
-        <col width="15px" />
-        <col width="650px" />
-        <col width="0px" />
-        <col width="20px" />
-        {% for data in answer %}
-            <tr>
-                <td>
-                    <a href="/question/{{ data.question_id }}/vote-up/{{ data.id }}">
-                        <img src="/static/up.png" height="20">
-                    </a>
-                </td>
-                <td>
-                    <a href="/question/{{ data.question_id }}/vote-down/{{ data.id }}">
-                        <img src="/static/down.png" height="20">
-                    </a>
-                </td>
-                <td>
-                    {{ data.vote_number }}
-                </td>
-                <td class="test">
-                    <div class="answer_list">
-                        {{ data.message }}
-                        <div class="add_comment_and_edit_answer">
-                            |
-                            <a class="questions_link" href="/answer/{{  data.id  }}/edit">Edit Answer</a>
-                            |
-                            <a class="questions_link" href="/answer/{{  data.id  }}/new-comment">Add Comment</a>
-                            |
+            {% for comment in comment_question %}
+                <tr>
+                    <td>
+                        <div class="question_comment">
+                            {{ comment.message }}
+                            {% for user in user_names %}
+                                {% if comment.user_id == user.id and question_id != '' %}
+                                    <div class="user_names_for_comments">by {{ user.username }}</div>
+                                {% endif %}
+                            {% endfor %}
                         </div>
-                        {% if data.comments != [] %}
-                        <br>
-                            <div class="answer_comment">
-                                <table class="fixed">
-                                    <col width="200px" />
-                                    <col width="120px" />
-                                    <col width="30px" />
-                                    <col width="20px" />
-                                    <col width="20px" />
-                                    <tr>
-                                        <th>Comment</th>
-                                        <th>Submission time</th>
-                                        <th>Edits</th>
-                                    </tr>
-                                    {% for i in data.comments %}
-                                    <tr>
-                                        <td>
-                                            {{ i.message }}
-                                        </td>
-                                        <td>
-                                            {{ i.submission_time }}
-                                        </td>
-                                        <td>
-                                            {{ i.edited_count }}
-                                        </td>
-                                        <td>
-                                            <a href="/comments/{{ i.id }}/{{ data.question_id }}/delete">
-                                                <img src="/static/delete.png" height="15">
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a class="questions_link" href="/comments/{{ i.id }}/edit/a">Edit</a>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </table>
+                    </td>
+                    <td>
+                        <div class="question_comment">
+                            {{ comment.submission_time }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="question_comment">
+                            {{ comment.edited_count}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="question_comment">
+                            <a href="/comments/{{ comment.id }}/{{ comment.question_id }}/delete">
+                                <img src="/static/delete.png" height="11">
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="question_comment">
+                            <a class="questions_link" href="/comments/{{ comment.id }}/edit/q">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </p>
+    <p>
+        <table align="center" class="fixed">
+            <col width="20px" />
+            <col width="20px" />
+            <col width="15px" />
+            <col width="650px" />
+            <col width="0px" />
+            <col width="20px" />
+            {% for data in answer %}
+                <tr>
+                    <td>
+                        <a href="/question/{{ data.question_id }}/vote-up/{{ data.id }}">
+                            <img src="/static/up.png" height="20">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="/question/{{ data.question_id }}/vote-down/{{ data.id }}">
+                            <img src="/static/down.png" height="20">
+                        </a>
+                    </td>
+                    <td>
+                        {{ data.vote_number }}
+                    </td>
+                    <td class="test">
+                        <div class="answer_list">
+                            {{ data.message }}
+                            <div class="add_comment_and_edit_answer">
+                                {% for user in user_names %}
+                                    {% if data.user_id == user.id %}
+                                        <div class="user_names_for_answers">by {{ user.username }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                                |
+                                <a class="questions_link" href="/answer/{{  data.id  }}/edit">Edit Answer</a>
+                                |
+                                <a class="questions_link" href="/answer/{{  data.id  }}/new-comment">Add Comment</a>
+                                |
                             </div>
+                            {% if data.comments != [] %}
+                            <br>
+                                <div class="answer_comment">
+                                    <table class="fixed">
+                                        <col width="200px" />
+                                        <col width="120px" />
+                                        <col width="30px" />
+                                        <col width="20px" />
+                                        <col width="20px" />
+                                        <tr>
+                                            <th>Comment</th>
+                                            <th>Submission time</th>
+                                            <th>Edits</th>
+                                        </tr>
+                                        {% for i in data.comments %}
+                                        <tr>
+                                            <td>
+                                                {{ i.message }}
+                                                {% for user in user_names %}
+                                                    {% if i.user_id == user.id and answer_id != '' %}
+                                                        <div class="user_names_for_comments">by {{ user.username }}</div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                            <td>
+                                                {{ i.submission_time }}
+                                            </td>
+                                            <td>
+                                                {{ i.edited_count }}
+                                            </td>
+                                            <td>
+                                                <a href="/comments/{{ i.id }}/{{ data.question_id }}/delete">
+                                                    <img src="/static/delete.png" height="15">
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a class="questions_link" href="/comments/{{ i.id }}/edit/a">Edit</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        {% if data.image != "" %}
+                            <p>
+                                <img src="{{ data.image }}" height="200"/>
+                            </p>
+                        {% else %}
                         {% endif %}
-                    </div>
-                </td>
-                <td>
-                    {% if data.image != "" %}
-                        <p>
-                            <img src="{{ data.image }}" height="200"/>
-                        </p>
-                    {% else %}
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="/answer/{{ data.id }}/delete/{{ data.question_id }}">
-                        <img src="/static/delete.png" height="15">
-                    </a>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-</p>
-<br>
-<form method="POST" action="/question/{% for data in question %}{{ data.id }}{% endfor %}">
-    <p>
-        <div align="center">
-            <textarea name="text" rows="5" cols="40">{{ add_answer }}</textarea>
-        </div>
+                    </td>
+                    <td>
+                        <a href="/answer/{{ data.id }}/delete/{{ data.question_id }}">
+                            <img src="/static/delete.png" height="15">
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
     </p>
-    <p>
-        <div align="center">
-            URL of your image:
-        </div>
-    </p>
-    <p>
-        <div align="center">
-            <input type="text" name="response-image">
-        </div>
-    </p>
-        <div align="center">
-            <input type="submit" value="Post answer">
-        </div>
-</form>
-<div class="limit" align="center">
-    <a class="limit_link" href = "/">Back to questions</a>
-</div>
-<div class="views" align="center">
-    Views: {% for data in question %}{{ data.view_number }}{% endfor %}
-</div>
-
+    <br>
+    <form method="POST" action="/question/{% for data in question %}{{ data.id }}{% endfor %}">
+        <p>
+            <div align="center">
+                <textarea name="text" rows="5" cols="40">{{ add_answer }}</textarea>
+            </div>
+        </p>
+        <p>
+            <div align="center">
+                URL of your image:
+            </div>
+        </p>
+        <p>
+            <div align="center">
+                <input type="text" name="response-image">
+            </div>
+        </p>
+            <div align="center">
+                <input type="submit" value="Post answer">
+            </div>
+    </form>
+    <div class="limit" align="center">
+        <a class="limit_link" href = "/">Back to questions</a>
+    </div>
+    <div class="views" align="center">
+        Views: {% for data in question %}{{ data.view_number }}{% endfor %}
+    </div>
+</body>
 {% endblock %}

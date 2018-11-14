@@ -23,7 +23,7 @@ h1, h4{
 }
 .logo{
     float: left;
-    padding-left: 100px;
+    padding-left: 20px;
     font-size: 30px;
     font-weight: bold;
     color: white;
@@ -48,7 +48,40 @@ h1, h4{
     display: block;
     padding: 30px 10px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 5px;
+}
+.questions_list_title{
+    text-align: justify;
+    display: block;
+    padding: 15px 10px;
+    background-color: white;
+    border-radius: 5px 5px 0px 0px;
+}
+.user_names_for_questions{
+    font-style: italic;
+    color: darkslateblue;
+    text-align: justify;
+    display: block;
+    padding: 0px 0px 10px 10px;
+    background-color: white;
+    border-radius: 0px 0px 5px 5px;
+}
+.user_names_for_answers{
+    font-style: italic;
+    color: white;
+    text-align: justify;
+    display: inline-block;
+    font-size: 12px;
+    border-radius: 0px 0px 5px 5px;
+}
+.user_names_for_comments{
+    float: right;
+    font-style: italic;
+    color: darkslateblue;
+    text-align: justify;
+    display: inline-block;
+    font-size: 10px;
+    border-radius: 0px 0px 5px 5px;
 }
 a.questions_link{
     text-decoration: none;
@@ -82,7 +115,7 @@ a:hover{
     text-align: justify;
     display: block;
     background-color: #54BBF2;
-    border-radius: 10px;
+    border-radius: 5px;
     font-weight: bold;
     font-size: 15px;
     color: white;
@@ -95,7 +128,7 @@ a:hover{
     display: block;
     padding: 10px 10px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 5px;
     color: darkslategrey;
 }
 .answer_comment{
@@ -104,7 +137,7 @@ a:hover{
     display: inline-block;
     padding: 10px 10px 10px 10px;
     background-color: aliceblue;
-    border-radius: 7px;
+    border-radius: 5px;
     margin: 3px;
     font-weight: bold;
     color: darkslategrey;
@@ -163,10 +196,27 @@ input[type=submit]{
     text-decoration: none;
     border-width: 0px;
 }
+input[type=submit]:hover{
+    background-color: steelblue;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    border-width: 0px;
+}
 input[type=text]{
-    border-color: dodgerblue;
+    border: 2px solid dodgerblue;
     border-radius: 5px;
 
+}
+input[type=password]{
+    border: 2px solid dodgerblue;
+    border-radius: 5px;
+}
+input[type=email]{
+    border: 2px solid dodgerblue;
+    border-radius: 5px;
 }
 textarea{
     border-color: dodgerblue;
@@ -192,11 +242,145 @@ ul{
 .card{
     justify-content: center;
     background-color: white;
-    padding: 25px 5px;
-    border-radius: 3px;
-    vertical-align: top;
+    padding: 25px;
+    border-radius: 6px;
     display: inline-block;
     box-shadow: 0 1px 20px rgba(0, 0, 0, .9);
-    width: 400px;
-    margin: 20px;
+    align-items: center;
+    width: 180px;
+    margin-top: 5%;
+    margin-left: 41%;
+}
+#register_button{
+    background-color: dodgerblue;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    float: right;
+    text-decoration: none;
+    font-size: 13px;
+}
+#register_button:hover{
+    background-color: steelblue;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    float: right;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+body.login_register{
+    background-color: dodgerblue;
+}
+body.profile_users{
+    background-color: lightblue;
+}
+
+.login_register_name{
+    margin-top: 5%;
+    color: white;
+    font-size: 30px;
+    text-align: center;
+}
+#username{
+    font-weight: bold;
+    color: white;
+    margin: 8px 8px 20px 32px;
+}
+#user_pic{
+    margin: 8px 8px 8px 32px;
+}
+
+.container_for_profile{
+    background-color: white;
+    padding: 20px 20px 0px 20px;
+    text-align: center;
+}
+.container_for_profile ul{
+    padding: 10px;
+}
+#profile_description{
+    display: inline-block;
+    text-align: left;
+    font-weight: bold;
+}
+#profile_description_text{
+    color: darkslateblue;
+    font-style: italic;
+    display: inline-block;
+    text-align: left;
+}
+#profile_picture{
+    display: inline-block;
+}
+.container_for_user_contributions table{
+    margin: auto;
+}
+.container_for_user_contributions td{
+    background-color: white;
+    padding: 20px;
+    text-align: center;
+}
+.title_for_user_contributions{
+    font-weight: bold;
+    font-size: 23px;
+    text-align: left;
+    padding-left: 100px;
+    color: white;
+    background-color: #54BBF2;
+}
+.not_posted_yet{
+    background-color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+
+
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: dodgerblue;
+    overflow-x: hidden;
+    transition: .5s;
+    padding-top: 60px;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: white;
+    display: block;
+    transition: .5s;
+}
+
+.sidenav a:hover {
+    color: darkslateblue;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
 }
