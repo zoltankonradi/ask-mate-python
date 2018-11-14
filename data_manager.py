@@ -640,19 +640,75 @@ def title_for_my_answers(cursor, user_id):
 @connection.connection_handler
 def title_for_my_comments_answers(cursor, user_id):
     cursor.execute("""
-                    SELECT question.title, comment.message FROM question INNER JOIN answer ON question.id =
-                    answer.question_id INNER JOIN comment ON comment.answer_id = answer.id WHERE answer.user_id = %(u_id)s;
+                    SELECT message, answer_id FROM comment WHERE user_id = %(u_id)s AND answer_id IS NOT NULL;
                     """, {'u_id': user_id})
-    return cursor.fetchall()
+    comment_and_answer_id = cursor.fetchall()
+    question_ids = []
+    for ids in comment_and_answer_id:
+        question_ids.append(ids['answer_id'])
+    # Get question ids from answers
+    question_ids_from_answers = []
+    for ids in question_ids:
+        cursor.execute("""
+                         SELECT question_id FROM answer WHERE id = %(u_id)s;
+                         """, {'u_id': ids})
+        question_ids = cursor.fetchall()
+        question_ids_from_answers.append(question_ids[0])
+    question_ids2 = []
+    for ids in question_ids_from_answers:
+        question_ids2.append(ids['question_id'])
+    # Get title from questions
+    titles_and_ids = []
+    for ids in question_ids2:
+        cursor.execute("""
+                         SELECT title, id FROM question WHERE id = %(u_id)s;
+                         """, {'u_id': ids})
+        title_and_id = cursor.fetchall()
+        titles_and_ids.append(title_and_id[0])
+    cursor.execute("""
+                     SELECT id AS c_id FROM comment WHERE user_id = %(u_id)s AND answer_id IS NOT NULL ;
+                     """, {'u_id': user_id})
+    comment_ids = cursor.fetchall()
+    comment_ids_list = []
+    for id in comment_ids:
+        comment_ids_list.append(id['c_id'])
+    for i in titles_and_ids:
+        i['c_id'] = 0
+    for id in comment_ids_list:
+        for stuff in titles_and_ids:
+            if stuff['c_id'] == 0:
+                stuff['c_id'] = id
+                break
+    return titles_and_ids
 
 
 @connection.connection_handler
 def title_for_my_comments_questions(cursor, user_id):
     cursor.execute("""
-                    SELECT question.title, comment.message FROM question INNER JOIN comment ON question.id =
-                    comment.question_id WHERE question.user_id = %(u_id)s;
+                    SELECT id, question_id FROM comment WHERE user_id = %(u_id)s AND question_id IS NOT NULL;
                     """, {'u_id': user_id})
-    return cursor.fetchall()
+    q_comments_and_ids = cursor.fetchall()
+    question_ids = []
+    for i in q_comments_and_ids:
+        question_ids.append(i['question_id'])
+    question_messages = []
+    for ids in question_ids:
+        cursor.execute("""
+                        SELECT title FROM question WHERE id = %(id)s;
+                        """, {'id': ids})
+        title = cursor.fetchall()
+        question_messages.append(title[0])
+    comment_ids = []
+    for i in q_comments_and_ids:
+        comment_ids.append(i['id'])
+    for i in question_messages:
+        i['c_id'] = 0
+    for id in comment_ids:
+        for stuff in question_messages:
+            if stuff['c_id'] == 0:
+                stuff['c_id'] = id
+                break
+    return question_messages
 
 
 @connection.connection_handler

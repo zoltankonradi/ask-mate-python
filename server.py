@@ -327,11 +327,11 @@ def user_profile(user_id):
     title_for_my_answers = data_manager.title_for_my_answers(user_id)
     q_title_for_my_comments = data_manager.title_for_my_comments_questions(user_id)
     a_title_for_my_comments = data_manager.title_for_my_comments_answers(user_id)
-    print(a_title_for_my_comments)
     return render_template('profile_users.html', page='profile', user=user,
                            every_question=every_question, every_answer=every_answer,
                            every_comment=every_comment, title_for_my_answers=title_for_my_answers,
-                           a_title_for_my_comments=a_title_for_my_comments)
+                           a_title_for_my_comments=a_title_for_my_comments,
+                           q_title_for_my_comments=q_title_for_my_comments)
 
 
 @app.route("/users")

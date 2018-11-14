@@ -148,7 +148,16 @@
                     </td>
                     {% endif %}
                     <td>
-                        title needed
+                        {% for title in q_title_for_my_comments %}
+                            {% if comment.id == title.c_id %}
+                                {{ title.title }}
+                            {% endif %}
+                        {% endfor %}
+                        {% for title in a_title_for_my_comments %}
+                            {% if comment.id == title.c_id %}
+                                {{ title.title }}
+                            {% endif %}
+                        {% endfor %}
                     </td>
                     <td>{{ comment.message }}</td>
                     <td>{{ comment.submission_time }}</td>
